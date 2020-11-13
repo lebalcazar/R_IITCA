@@ -1,0 +1,26 @@
+file format : IDRISI Raster A.1
+file title  : Projection from latlong to utm-14n
+data type   : integer
+file type   : binary
+columns     : 1129
+rows        : 779
+ref. system : utm-14n
+ref. units  : m
+unit dist.  : 1.0000000
+min. X      : 243000.0000000
+max. X      : 355900.0000000
+min. Y      : 3113400.0000000
+max. Y      : 3191300.0000000
+pos'n error : unknown
+resolution  : unknown
+min. value  : 205
+max. value  : 1204
+display min : 205
+display max : 1204
+value units : unspecified
+value error : unknown
+flag value  : -32768
+flag def'n  : no data
+legend cats : 0
+lineage     : This file was created by the PROJECT module with the command line: 
+lineage     : 1*C:\TerrSet_wrk\cncMex\wrk\s_b1.rst*C:\Program Files (x86)\TerrSet\Georef\latlong.ref*C:\TerrSet_wrk\cncMex\rcs\prmcnc\s_b1w24290utm.rst*C:\Program Files (x86)\TerrSet\Georef\utm-14n.ref*243000*355900*3113400*3191300*1129*779*-32768*2
