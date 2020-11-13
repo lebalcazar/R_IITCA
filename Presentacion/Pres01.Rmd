@@ -1,5 +1,5 @@
 ---
-title: "Introducción al lenguaje R con un enfoque espacial"
+title: "Introducción al lenguaje R"
 author: "Luis Balcázar"
 date: "10/30/2020"
 # widgets : [mathjax, quiz, bootstrap, interactive] # {mathjax, quiz, bootstrap}
@@ -13,11 +13,16 @@ biglogo: uaemex.png
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-## R Markdown
+## ¿Por qué R?
 
-<!-- This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>. -->
+\- Software libre
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
+- Multiplataforma: Linux, Mac OS X, Windows
+
+- Comunidad grande de usuarios muy activos en redes y plataformas
+
+- Número grande de librerías {packages}
+
 
 ## Slide with Bullets
 
