@@ -1,3 +1,4 @@
+# Cargar librerias
 library(tidyverse) # Pkg para ciencia de datos 
 library(RSAGA)     # Pkg para integrar SAGA con R
 library(raster)    # Pkg para manejar datos raster

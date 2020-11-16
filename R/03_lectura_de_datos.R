@@ -1,4 +1,5 @@
-# lectura de datos geo-espaciales
+# Lectura de datos geo-espaciales
+# cargar librerias
 library(lubridate)
 library(raster)
 library(sp)

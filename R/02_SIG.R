@@ -1,5 +1,6 @@
 # Sistemas de Información Geográfica con R
 # 
+#
 # SIG --------------------------------------------
 
 librerias <- (c("RgoogleMaps", "ggmap", "mapproj", "sf", "osmar", "tidyverse","RColorBrewer",

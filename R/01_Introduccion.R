@@ -1,6 +1,7 @@
 
 # Introducción a R: -------------------------------------------------------
 # básico: vectores, matrices, data frame y listas
+#
 
 rm(list = ls())
 
