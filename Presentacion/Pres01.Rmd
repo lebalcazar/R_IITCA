@@ -2,11 +2,11 @@
 title: "Introducción al lenguaje R"
 author: "Luis Balcázar"
 date: "10/30/2020"
-# widgets : [mathjax, quiz, bootstrap, interactive] # {mathjax, quiz, bootstrap}
-# ext_widgets : {rCharts: [libraries/nvd3, libraries/leaflet, libraries/dygraphs]}
-# mode : selfcontained # {standalone, draft}
+widgets : [mathjax, quiz, bootstrap, interactive] # {mathjax, quiz, bootstrap}
+ext_widgets : {rCharts: [libraries/nvd3, libraries/leaflet, libraries/dygraphs]}
+mode : selfcontained # {standalone, draft}
 output: ioslides_presentation
-biglogo: uaemex.png
+biglogo: presentacion/iitca.png
 ---
 
 ```{r setup, include=FALSE}
@@ -15,22 +15,30 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## ¿Por qué R?
 
-\- Software libre
-
-- Multiplataforma: Linux, Mac OS X, Windows
-
-- Comunidad grande de usuarios muy activos en redes y plataformas
-
-- Número grande de librerías {packages}
+- Software libre
+- Multiplataforma: Linux, MacOS, Windows
+- Comunidad grande de usuarios muy activos en internet
+- Número grande de librerías
 
 
-## Slide with Bullets
+## Operadores básicos
 
-- Bullet 1
-- Bullet 2
-- Bullet 3
+| Operador | Significado                                                       |
+| -------- | :--------:                                                        |
+|**<-**    |	 Asignar (también **=**)                                         |
+|**c**     |   Concatenar (función)                                            |
+|**\#**    | 	 Comentar                                                        |
+|**%>%**   |  *pipe line* (conector para secuencia de múltiples operaciones)   |
 
-## Slide with R Output
+## Operadores
+
+![](img/operadores.png)
+
+## Objetos
+
+![](img/objetos.png)
+
+
 
 ```{r cars, echo = TRUE}
 summary(cars)
