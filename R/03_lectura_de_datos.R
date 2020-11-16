@@ -1,6 +1,7 @@
 # lectura de datos geo-espaciales
 library(lubridate)
-
+library(raster)
+library(sp)
 # datos raster  -------------------------------------------------------------
 
 # datos PERSIANN-CDR
