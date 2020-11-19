@@ -46,7 +46,7 @@ Abrir el programa **Rstudio**, este cargará automáticamente **R**. Al abrir Rs
 
 Para crear un nuevo *Script de R* vaya a la pesataña File/New File/R Script o bien con la combinación de las teclas `Ctrl+Shift+N`.
 
-Para documentar una línea utilice el signo `#`, todo lo que esté a la derecha de la mimsa linea no se ejecuturá. Para eliminar la documentar un grupo de líneas presione `Crtl+C`, y para quitar la documentación es con el mismo atajo. Por ejemplo:
+Para documentar una línea utilice el signo `#`, todo lo que esté a la derecha de la mimsa linea no se ejecuturá. Para documentar un grupo de líneas presione `Crtl+C`, y para quitar la documentación es con el mismo atajo. Por ejemplo:
 
 ```{r, echo = T}
 # Este es un comentario
@@ -62,7 +62,7 @@ Esto genera un objeto llamado *matriz*. Observe que las líneas que contienen lo
 matriz
 ```
 
-Vuelva al código donde se creó la matriz y observe que para asignar el resultado de un proceso a una variable se utiliza los signos `<-` (menor que y guión, sin espacios). Veamos otro ejemplo, para asignar un vector de 4 números aleatorios al objeto `a`, se escribe de la siguiente manera:
+Vuelva al código donde se creó la matriz y observe que para asignar el resultado de un proceso a una variable se utiliza los signos `<-` (menor que y guión, sin espacios entre signos). Veamos otro ejemplo, para asignar a un objeto `a` un vector de 4 números aleatorios, se escribe de la siguiente manera:
 
 ```{r}
 a <- rnorm(4)
