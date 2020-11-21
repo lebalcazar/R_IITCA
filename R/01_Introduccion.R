@@ -18,25 +18,23 @@ hist(rnorm(n = 1000, mean = 5, sd = 2))
 # secuencia 
 seq(20)
 1:10
-sample(100, 10, replace = T)
+sample(c(-100:100), 10, replace = T)
 # letras
 letters[10]
 LETTERS[1:3]
 
 # operaciones algebraicas (suma, resta, multiplicación, división)
 c(2,5,2) + c(6,5,7)
-c(2,5,2) * c(6,5,7)
-c(2,5,2) / c(6,5,7)
-
 
 # recursividad
-x <- c(2,5)
-y <- c(3,2,6, 8)
+(x <- c(2,5))
+(y <- c(3,2,6, 8))
 x * y
 
 # indexación o subconjuntos
 vec <- c(4,9,6,3)
 vec[3:4]
+vec[c(4,1)]
 
 # datos faltantes 
 vec <- c(4, NA, NA, 9,6, NA, 3)
@@ -62,7 +60,7 @@ table(v.logico)
                                   v.nombres = v.nombres, 
                                   v.logico = v.logico))  # esto es tidyverse
 
-(df2 <- tibble(v.numeros, v.nombres, v.logico))  # esto es tidyverse
+(df2 <- tibble::tibble(v.numeros, v.nombres, v.logico))  # esto es tidyverse
 
 colnames(df.from.bind)
 
