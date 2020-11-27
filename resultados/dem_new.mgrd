@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SAGA_METADATA>
+  <HISTORY saga-version="2.3.2">
+    <MODULE library="ta_preprocessor" id="3" name="Fill Sinks (Planchon/Darboux, 2001)">
+      <OPTION type="grid_system" id="PARAMETERS_GRID_SYSTEM" name="Grid system">
+        <CELLSIZE>0.008333333</CELLSIZE>
+        <XMIN>-13.2458333333</XMIN>
+        <XMAX>-8.7541668463</XMAX>
+        <YMIN>9.7541666667</YMIN>
+        <YMAX>13.2458331937</YMAX>
+      </OPTION>
+      <OPTION type="double" id="MINSLOPE" name="Minimum Slope [Degree]">0.100000</OPTION>
+      <INPUT type="grid" id="DEM" name="DEM" system="PARAMETERS_GRID_SYSTEM">
+        <FILE>../datos/demGrid.sgrd</FILE>
+      </INPUT>
+      <OUTPUT type="grid" id="RESULT" name="Filled DEM">demGrid [no sinks]</OUTPUT>
+    </MODULE>
+  </HISTORY>
+  <SOURCE>
+    <FILE>..\resultados\dem_new.sgrd</FILE>
+    <DATABASE></DATABASE>
+    <PROJECTION></PROJECTION>
+  </SOURCE>
+  <DESCRIPTION></DESCRIPTION>
+</SAGA_METADATA>

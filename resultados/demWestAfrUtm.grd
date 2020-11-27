@@ -1,0 +1,26 @@
+[general]
+creator=R package 'raster'
+created=2020-10-03 13:57:26
+[georeference]
+nrows=434
+ncols=553
+xmin=28916.3063381925
+ymin=1073166.8512816
+xmax=531593.306338192
+ymax=1473314.8512816
+projection=+proj=utm +zone=29 +datum=WGS84 +units=m +no_defs
+[data]
+datatype=FLT4S
+byteorder=little
+nbands=1
+bandorder=BIL
+categorical=FALSE
+minvalue=25.94495536025
+maxvalue=1462.44425761796
+nodatavalue=-3.4e+38
+[legend]
+legendtype=
+values=
+color=
+[description]
+layername=altCnc

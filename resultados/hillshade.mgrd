@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SAGA_METADATA>
+  <HISTORY saga-version="2.3.2">
+    <MODULE library="ta_lighting" id="0" name="Analytical Hillshading">
+      <OPTION type="grid_system" id="PARAMETERS_GRID_SYSTEM" name="Grid system">
+        <CELLSIZE>0.008333333</CELLSIZE>
+        <XMIN>-13.2458333333</XMIN>
+        <XMAX>-8.7541668463</XMAX>
+        <YMIN>9.7541666667</YMIN>
+        <YMAX>13.2458331937</YMAX>
+      </OPTION>
+      <OPTION type="choice" id="METHOD" name="Shading Method" index="0">Standard</OPTION>
+      <OPTION type="double" id="AZIMUTH" name="Azimuth [Degree]">315.000000</OPTION>
+      <OPTION type="double" id="DECLINATION" name="Height [Degree]">45.000000</OPTION>
+      <OPTION type="double" id="EXAGGERATION" name="Exaggeration">4.000000</OPTION>
+      <INPUT type="grid" id="ELEVATION" name="Elevation" system="PARAMETERS_GRID_SYSTEM">
+        <FILE>../datos/demGrid.sgrd</FILE>
+      </INPUT>
+      <OUTPUT type="grid" id="SHADE" name="Analytical Hillshading">Analytical Hillshading</OUTPUT>
+    </MODULE>
+  </HISTORY>
+  <SOURCE>
+    <FILE>..\resultados\hillshade.sgrd</FILE>
+    <DATABASE></DATABASE>
+    <PROJECTION></PROJECTION>
+  </SOURCE>
+  <DESCRIPTION></DESCRIPTION>
+</SAGA_METADATA>
