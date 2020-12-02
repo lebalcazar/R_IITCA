@@ -46,7 +46,7 @@ cowplot::plot_grid(ndvi_plot, falso_color)
 
 
 # cre una lista con las imágenes raster
-lf <- list.files('datos/raster/L8_NDVI/Nueva carpeta/', pattern = 'TIF$', full.names = T) 
+lf <- list.files('datos/raster/L8_NDVI/', pattern = 'tif$', full.names = T) 
 
 # apilar las imágenes en el objeto rst 
 rst <- raster::stack(lf)
@@ -64,10 +64,15 @@ for (i in 1:nlayers(rstCrop)){
 writeRaster(rstCrop[[i]], 
             filename = paste('datos/raster/L8_NDVI/', paste0('B',i), '.tif'), 
             format = 'GTiff')
-  } 
+} 
+
+writeRaster(rstCrop,
+            bylayer = T, 
+            filename = paste0('datos/raster/L8_NDVI/', names(rstCrop), '.tif'), 
+            format = 'GTiff')
 
 # renombrar las bandas con RGB 
-blue <- rstCrop$LC08_L1TP_026047_20200217_20200225_01_T1_B2 
+blue <- rstCrop$ LC08_L1TP_026047_20200217_20200225_01_T1_B2 
 green <- rstCrop$LC08_L1TP_026047_20200217_20200225_01_T1_B3 
 red <- rstCrop$LC08_L1TP_026047_20200217_20200225_01_T1_B4 
 nir <- rstCrop$LC08_L1TP_026047_20200217_20200225_01_T1_B5  
