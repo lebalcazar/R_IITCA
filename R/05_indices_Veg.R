@@ -1,7 +1,7 @@
 
 
 # cre una lista con las imágenes raster
-lf <- list.files('datos/raster/L8_NDVI', pattern = 'tif$', full.names = T) 
+lf <- list.files('datos/raster/', pattern = 'tif$', full.names = T) 
 
 # apilar las imágenes en el objeto rst 
 rst <- raster::stack(lf)

@@ -29,13 +29,12 @@ rep(x = 1:3, each = 5)
 # secuencia con decimales
 
 
-# aleatorios
+# datos aleatorios 
+rnorm(n = 10, mean = 5, sd = 2)
+rweibull(10, shape = 1, scale = 1)
 
-
-
-hist(rnorm(n = 1000, mean = 5, sd = 2))
-
-sample(c(-100:100), 10, replace = T)
+# muestra aleatoria
+sample(-100:100, 10, replace = T)
 
 # letras
 letters[10]
