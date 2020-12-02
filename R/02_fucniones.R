@@ -58,6 +58,7 @@ for(i in 1:10){
   print(i + i^2)
 }
 
+
 # valor máximo de un df
 colMax <- tibble()
 for(i in 1:ncol(datosG)){
@@ -69,6 +70,8 @@ for(i in 1:ncol(datosG)){
 }
 colMax 
 
+
+
 # en una función
 colMaxx <- function(x){
   colMax = tibble()
@@ -79,11 +82,49 @@ colMaxx <- function(x){
                         c(Col =  i, 
                           Max = max))
   }
-  print(colMax)
+  return(colMax)
 }
-colMaxx(datosG)
 
+colMaxx2 <- function(x){
+  colMax = tibble(col = rep(NA, ncol(datosG)), Max = rep(NA, ncol(datosG)))
+  for(i in 1:ncol(datosG)){
+    columna <- dplyr::pull(datosG, i)
+    colMax[[1]][i] <- i 
+    colMax[[2]][i] <- max(columna)
+  }
+  return(colMax)
+}
 
+colMaxx3 <- function(x){
+  colMax = tibble(col = rep(NA, ncol(datosG)), Max = rep(NA, ncol(datosG)))
+  for(i in 1:ncol(datosG)){
+    columna <- datosG[[i]]
+    colMax[[1]][i] <- i 
+    colMax[[2]][i] <- max(columna)
+  }
+  return(colMax)
+}
+
+colMaxx4 <- function(x){
+  colMax = tibble(col = rep(NA, ncol(datosG)), Max = rep(NA, ncol(datosG)))
+  for(i in 1:ncol(datosG)){
+    columna <- datosG[i]
+    colMax[[1]][i] <- i 
+    colMax[[2]][i] <- max(columna)
+  }
+  return(colMax)
+}
+colMaxx3(datosG)
+
+microbenchmark::microbenchmark(
+  colmax_for = colMaxx(datosG),
+  colmax2_for = colMaxx2(datosG),
+  colmax3_for = colMaxx3(datosG),
+  colmax4_for = colMaxx4(datosG),
+  lapply = as_tibble(lapply(datosG, max)),
+  map = map_df(datosG, max),
+  dplyr = summarise_all(datosG, ~max(.)),
+  times = 1000)
 
 
 
