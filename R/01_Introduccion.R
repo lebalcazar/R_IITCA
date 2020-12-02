@@ -15,9 +15,16 @@ rnorm(10)
 letters[1:10]
 
 
-# secuencia enteros 
-seq(1, 20, by = 0.5)
-1:10
+# secuencia de enteros 
+seq(from = 1, to = 20, by = 0.5)
+
+# con :
+8:17
+10:1
+
+# repetir un secuencia de números
+rep(x = 1:3, times = 5)
+rep(x = 1:3, each = 5)
 
 # secuencia con decimales
 
