@@ -24,6 +24,8 @@ moda <- function(v){
   v.unique <- unique(v)  # valores únicos del vector
   v.unique[match(v, v.unique) %>%   # repetición de los índices o posiciones del vector
              tabulate() %>%  # enumera las repeticiones de cada índice
+             which.max()]  # seleciona el máximo valor del índice (posición) 
+
 }
 
 datosG %>% 
