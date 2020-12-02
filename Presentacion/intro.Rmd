@@ -1,5 +1,6 @@
 ---
-title: "Introducción a R (enfoque espacial)/ Instalación de programas"
+title: "Introducción a R (enfoque espacial)"
+subtittle: "Instalación de programas"
 author: "Luis E. Balcázar"
 date: "Diciembre 2020"
 output: pdf_document
@@ -33,7 +34,6 @@ Abrir el programa **Rstudio**, este cargará automáticamente **R**. Al abrir Rs
 
 
 2) En el panel izquierdo-inferior se encuentra **la consola** de **R**. Aquí se despliega el código que se ejecuta en el editor. Desde la consola también se puede escribir y ejecutar código, sin embargo, el código escrito en la consola se almacena temporalmente en la memoria, y se mantiene mientras dure la sesión y la computadora se encuentre encendida. Para limpiar la consola presione las teclas `Ctrl+L`. 
-
 
 3) El **"environment"** de **R** se encuentra en la parte superior-derecha, aquí se almacenan los `objetos` creados en el editor y/o consola. Además, se puede revisar el historial (**History**) que se imprime en la **consola**.
 
