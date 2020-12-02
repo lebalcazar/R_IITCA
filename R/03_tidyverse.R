@@ -40,11 +40,10 @@ iris %>%
   group_by(Species) %>% 
   summarise_all(list(mn = min, mx = max)) %>% 
   pivot_longer(cols = -Species) %>% 
-  pivot_wider()
+  pivot_wider(names_from = name, values_from = value)
 
 
-
-# filtrar
+  # filtrar
 iris %>% 
   filter(Species == 'versicolor') %>% 
   filter(Sepal.Length >= mean(Sepal.Length))
@@ -54,11 +53,4 @@ iris %>%
   filter(Sepal.Length > mean(Sepal.Length) & Petal.Width <= mean(Petal.Width))
 
 
-# plots -------------------------------------------------------------------
 
-# graficos base 
-plot <- plot(Sepal.Length ~ Petal.Length, data = iris,
-             main = 'Pétalo vs Sépalo', 
-             xlab = 'Longitud del Sépalo', ylab = 'Longitud del Pétalo', 
-             col = 'blue', 
-             type = 'p', pch = 16)
