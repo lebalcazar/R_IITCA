@@ -8,7 +8,14 @@ library(rlang)
 
 vx <- c(45, 46.8, -67, 34.6, 12, 34, 98)
 vx
+suma.vx <- sum(vx)
+raiz.vx <- sqrt(suma.vx)
+redn.vx <- round(raiz.vx, 2) 
+redn.vx
+
 round(sqrt(sum(vx)),2)
+
+vx %>% sum() %>% sqrt() %>% round(2)
 
 # listas ------------------------------------------------------------------
 
@@ -57,7 +64,7 @@ iris %>%
   pivot_wider(names_from = name, values_from = value)
 
 
-  # filtrar
+# filtrar
 iris %>% 
   filter(Species == 'versicolor') %>% 
   filter(Sepal.Length >= mean(Sepal.Length))
@@ -65,6 +72,9 @@ iris %>%
 iris %>% 
   filter(Species == 'versicolor') %>% 
   filter(Sepal.Length > mean(Sepal.Length) & Petal.Width <= mean(Petal.Width))
+
+
+
 
 
 
