@@ -127,7 +127,7 @@ diag(m2)
 m1[2:3,2:3]
 m1[2:3, c(1,3)]
 
-# conteo
+# Suma por columnas o filas
 colSums(m1)
 rowSums(m1)
 
