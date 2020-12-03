@@ -27,9 +27,10 @@ rep(x = 1:3, times = 5)
 rep(x = 1:3, each = 5)
 
 # secuencia con decimales
-
+seq(3, 18, 0.6)
 
 # datos aleatorios 
+rnorm(15)
 rnorm(n = 10, mean = 5, sd = 2)
 rweibull(10, shape = 1, scale = 1)
 
@@ -82,7 +83,7 @@ table(v.logico)
 colnames(df.from.bind)
 
 
-# data frame indexación [filas, columnas] ----------------------------------------------------------
+# data frame indexación [filas, columnas] 
 
 df.from.bind[5:6, 'v.nombres']
 

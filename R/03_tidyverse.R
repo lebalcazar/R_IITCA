@@ -4,6 +4,20 @@
 library(tidyverse)
 library(rlang)
 
+# pipe %>% ----------------------------------------------------------------
+
+vx <- c(45, 46.8, -67, 34.6, 12, 34, 98)
+vx
+round(sqrt(sum(vx)),2)
+
+# listas ------------------------------------------------------------------
+
+l1 <- list(df.from.v, v.letras, f = factor(c(3,8,9)), v.new = 1:5)
+
+#subset
+l1[[1]][2:6, ] %>% colSums()
+l1[[4]] %>% mean()
+
 # conjunto de datos del género de planta iris
 iris
 
