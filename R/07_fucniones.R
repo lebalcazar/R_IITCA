@@ -128,6 +128,6 @@ microbenchmark::microbenchmark(
   dplyr = summarise_all(datosG, ~max(.)),
   times = 1000)
 
-
+# para usar microbenchmark necesitas instalarlo primero, Sopenco!
 
 
