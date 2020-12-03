@@ -15,6 +15,21 @@ env
 
 dem <- raster(x = 'datos/raster/demEscondido/s_b1w24290utm.rst')
 
+rsaga.get.libraries()
+rsaga.get.modules("ta_preprocessor")
+rsaga.get.usage("ta_preprocessor", 4)
+RSAGA::rsaga.geoprocessor(lib = "ta_preprocessor", 
+                          module = 4, 
+                          param = list(
+                            ELEV = "datos/raster/demEscondido/s_b1w24290utm.rst",
+                            FILLED = "datos/raster/demEscondido/s_b1w24290utm_fill",
+                            MINSLOPE = 0.0001))
+rsaga.fill.sinks(in.dem = "datos/raster/demEscondido/s_b1w24290utm.rst",
+                 out.dem = "datos/raster/demEscondido/s_b1w24290utm_fill2",
+                 method = "xxl.wang.liu.2006",
+                 minslope = 0.0001)
+raster("datos/raster/demEscondido/s_b1w24290utm_fill.sdat") %>% plot()
+
 # ver el raster-DEM en modo vista
 tmap_mode(mode = 'view')
 tm_shape(dem) +
