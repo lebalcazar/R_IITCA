@@ -116,7 +116,10 @@ colMaxx4 <- function(x){
   }
   return(colMax)
 }
+colMaxx(datosG)
+colMaxx2(datosG)
 colMaxx3(datosG)
+colMaxx4(datosG)
 
 microbenchmark::microbenchmark(
   colmax_for = colMaxx(datosG),
