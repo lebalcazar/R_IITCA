@@ -1,140 +1,163 @@
 
 # Introducción a R: -------------------------------------------------------
 # básico: vectores, matrices, data frame y listas
-#
+
 
 # vectores ----------------------------------------------------------------
 
-v.numeros <- c(5, 8, 2, 4, -9, 8, 10, 0, -5, 6)
-v.nombres <- c('María', 'Pedro', 'Juan', 'Julia', 'Carmita', 'Carlos', 
-               'Liliana', 'Silvia', 'Flor', 'Ana')
-v.logico <- c(TRUE, FALSE, TRUE, FALSE, TRUE, TRUE, TRUE, FALSE, TRUE, TRUE)
+v.numeros <- c(5, 18, -2, 10, -5)
+v.nombres <- c('María', 'Pedro', 'Juan', 'Julia', 'Ana')
+v.logico <- c(TRUE, FALSE, TRUE, TRUE, FALSE)
 
-# construir otros vectores:
-rnorm(10)
-letters[1:10]
-
+# construir otros vectores ":"
+8:17  # from:to, by = 1
+10:1
 
 # secuencia de enteros 
-seq(from = 1, to = 20, by = 0.5)
-
-# con :
-8:17
-10:1
+seq(from = 1, to = 20)
+seq(1, 20, by = 0.1)  # incremento de la secuencia
 
 # repetir un secuencia de números
 rep(x = 1:3, times = 5)
 rep(x = 1:3, each = 5)
 
-# secuencia con decimales
-seq(3, 18, 0.6)
-
-# datos aleatorios 
-rnorm(15)
-rnorm(n = 10, mean = 5, sd = 2)
-rweibull(10, shape = 1, scale = 1)
-
-# muestra aleatoria
-sample(-100:100, 10, replace = T)
-
 # secuencia de reales
 seq(from = 0, to = 2, by = 0.5)
 (0:4)*0.5
 
-# Enteros aleatorios del rango de -100 a 100
-sample(x = -100:100, size = 10, replace = TRUE)
+# datos aleatorios 
+rnorm(n = 15, mean = 0, sd = 1)
+rnorm(15)
+rnorm(10, 5, 2)
+rweibull(10, shape = 1, scale = 1)
 
-# letras
-letters[10]
-LETTERS[1:3]
+
+# muestra aleatoria
+sample(x = -100:100, size = 8, replace = TRUE)
+sample(-100:100, 8,  T)
+sample(x = letters[], 5, replace = F)
 
 # operaciones algebraicas (suma, resta, multiplicación, división)
-c(2,5,2) + c(6,5,7)
+c(2, 5, 2) + c(6, 5, 7)
 
 # recursividad
-(x <- c(2,5))
-(y <- c(3,2,6, 8))
+(x <- c(2, 5))
+(y <- c(3, 2, 6, 8))
 x * y
 
 # indexación o subconjuntos
-vec <- c(4,9,6,3)
+vec <- c(4, 9, 6, 3)
 vec[3:4]
 vec[c(4,1)]
 
 # datos faltantes 
 vec <- c(4, NA, NA, 9,6, NA, 3)
+sum(vec)
 sum(vec[!is.na(vec)]) # devuelve la suma de los datos que no son NA
-sum(vec, na.rm = TRUE)
 sum(is.na(vec)) #devuelve el total de valores NA
 
-# estructura y tipo de dato
-str(v.logico)
-typeof(v.nombres)
-
 # dimensión del vector
-length(vec) #incluye los valores identificados como NA
-length(vec[!is.na(vec)]) #devuelve el total de valores sin contar los NA
+length(vec)  # incluye los valores identificados como NA
 
-# conteo
-table(v.numeros)
-sum(v.logico)
-table(v.logico)
+# obtener el total sin NA
+length(vec[!is.na(vec)]) 
+
+# vector de fechas
+(fecha <- seq(as.Date(ISOdate(2003,1,1)),
+             as.Date(ISOdate(2003,5,31)),
+             by = 'month'))
+
 
 # data frame --------------------------------------------------------------
 
-(df.from.v <- data.frame(v.numeros, v.nombres, v.logico))
+(df.from.v <- data.frame(fecha, v.numeros, v.nombres, v.logico))
 
-(df.from.bind <- dplyr::bind_cols(v.numeros = v.numeros, 
-                                  v.nombres = v.nombres, 
-                                  v.logico = v.logico))  # esto es tidyverse
-
-(df2 <- tibble::tibble(v.numeros, v.nombres, v.logico))  # esto es tidyverse
-
-colnames(df.from.bind)
+colnames(df.from.v)
+dim(df.from.v)
 
 
-# data frame indexación [filas, columnas] ------------------------------------
+# data frame indexación [filas, columnas] 
+# [filas, columnas]
+df.from.v[1, ]  # selecciona fila 1
+df.from.v[ ,1]  # selecciona columna 1
+df.from.v[3:5, 'v.nombres']  # seleccion con el nombre de la columna (variable)
+df.from.v$v.numeros  # seleccion del nombre de la columna y el operador $
 
-df.from.bind[5:6, 'v.nombres']
+# seleccion por indexación y suma de columnas 
+colSums(df.from.v[ ,c("v.numeros", "v.logico")])
+colSums(df.from.v[ ,-c(1,3)])
 
 
-# conteo
-colSums(df.from.bind[, c("v.numeros", "v.logico")])
-colSums(df.from.bind[, -2])
+# agregar o quitar una columna
+df.from.v[ ,'nueva_variable'] <- 1:nrow(df.from.v)
+
+df.from.v <- data.frame(df.from.v, 
+                        nueva_variable2 = round(rnorm(nrow(df.from.v)),2)
+)
+
+# quitar columnas
+df.from.v[ ,-c(1, 4)]     # con la ubicación de las variables
+df.from.v$fecha <- NULL   # con $ y NULL
+df.from.v  
+
+df.from.v[setdiff(names(df.from.v), 'v.numeros')]  # con setdiff y los nombres 
+  
 
 # matrices ----------------------------------------------------------------
 
-matrix(1:12, nrow = 4, ncol = 3, byrow = F)
+matrix(data = 1:12, nrow = 4, ncol = 3)
 
+# matriz desde vectores
+(matriz <- cbind(c(1:3), rnorm(3), c(10, 20, 30)))
+
+# matriz con función matrix()
 (m1 <- matrix(data = 1:9, nrow = 3))
+(m2 <- matrix(rnorm(9), 3))
 
+ m1 * m2
 
-# crear otra matrix n x n 
-set.seed(123456)
-(m2 <- matrix(rnorm(9),3))
-
-# determinante de la matriz
-det(m1)
-
-# inversa de la matriz
-(m2.inv <- solve(m2))
-
-# matriz identidad 
-diag(m2)
+# operaciones 
+m1 * m2
 
 # indexación de matrices
-# matrix[filas, columas]
-m1[2:3,2:3]
+# matriz[filas, columas]
+m1[c(1,3),2:3]
 m1[2:3, c(1,3)]
+
 
 # Suma por columnas o filas
 colSums(m1)
 rowSums(m1)
 
 
+# revisar por su cuenta la ayuda para:  
+# obtener el determinante det(matriz)
+# la inversa de la matriz solve(matriz)
+# la diagonal de la matriz diag(matriz)
+# valores propios eigen(matriz)
 
 
 
 
+# arrays ------------------------------------------------------------------
+# generalizacion de una matriz con n dimensiones (del mismo tipo de dato)
 
+(ar <- array(data = c(m1, m2), dim = c(3,3,2)))
+
+# seleccionar [fila, columna, (layer, page)]
+
+ar[3,1,2]
+ar[,,1][,c(1,3)]
+
+
+# listas ------------------------------------------------------------------
+# las listas son un conjunto de datos que pueden tener vectores, data frames, etc
+
+lista <- list(v.logico, df.from.v, ar)
+lista
+
+# seleccionar con el operador [[]]
+lista[[2]][,1]
+lista[[3]][ , ,1][2,]
+lista[[2]]$v.nombres
 
