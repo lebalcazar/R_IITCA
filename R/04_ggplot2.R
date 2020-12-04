@@ -52,16 +52,43 @@ iris %>%
   labs(x = 'Longitud del Sépalo', y = 'Longitud del Pétalo')
 
 # histograma con la lluvia media mensual
-prc.mes %>% 
+  prc.mes %>% 
   group_by(nombre, mes) %>% 
   summarise(prc_mes_Med = mean(prcSum, na.rm = T)) %>% 
-  ggplot(aes(x = mes, y = prc_mes_Med, fill = nombre)) +
+  ggplot(aes(x = mes, y = prc_mes_Med, fill = nombre)
+         ) +
   geom_col(position = 'dodge') +  
-  scale_x_continuous(breaks = 1:12,
-                     labels = month(1:12, label = T))
+  scale_x_continuous(name = '',
+                     breaks = 1:12,
+                     labels = month(1:12, label = T)
+                     ) +
+  scale_y_continuous(name = expression(paste('Preciptación (mm',' ', mes^-1, ')')), 
+                     breaks = seq(0, 500, 100),
+                     labels = seq(0, 500, 100)
+                     )+
+  scale_fill_manual(name = 'Estaciones', 
+                    values = c('black', 'grey20', 'grey40', 'grey60')
+                    )+
+    theme_bw()+
+    theme(legend.position = c(0.20, 0.70),
+          panel.grid = element_blank()
+          )
+   
+# guaradar 
+ggsave('resultados/plots/prc.mes.png')  
+ 
+# guardar con especificaiones 
+  ggsave(filename = 'prc.mes2.png', plot = last_plot(), 
+         path = 'resultados/plots/', device = 'png',
+         dpi = 600, width = 4, height = 3)
 
-
-
+# guardar 
+  saveRDS(object = prc.mes, file = 'resultados/plots/prc.mes3.RDS')
+  
+  load('resultados/plots/prc.mes3.RDS')
+  
+  
+  # 
 
 
 
