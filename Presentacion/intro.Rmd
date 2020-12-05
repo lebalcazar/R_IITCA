@@ -1,8 +1,8 @@
 ---
-title: "Introducción a R (enfoque espacial)"
+title: "Taller Introducción a R"
 subtitle: "Instalación de programas"
 author: "Luis Balcázar"
-date: "Diciembre 2020"
+date: "Toluca, México, diciembre de 2020"
 output: pdf_document
 urlcolor: blue
 citecolor: blue
@@ -15,48 +15,46 @@ lang: es
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```
 
-En este documento usted econtrará los sitios web para descargar los programas requeridos para el taller de R. Deberá descargar R, Rtools, Rstudio, SAGA, y algunos paquetes de R desde Rstudio. Esto le tomará un tiempo estimado entre 30 y 40 minutos. 
+En este documento usted econtrará los sitios web para descargar los programas R, Rtools, Rstudio, SAGA, y algunos paquetes de R. La instalación le tomará un tiempo estimado entre 20 y 30 minutos. 
 
-Los datos para el taller se encuentran en un repositorio de  [GitHub](https://github.com/lebalcazar/R_IITCA.git) (estará disponible una hora antes del curso). Si usted tiene una cuenta de **Git** lo puede clonar, sino lo puede descargar y guaradar en su computador. 
-
+Los datos para el taller se encuentran en un repositorio de  [GitHub](https://github.com/lebalcazar/R_IITCA.git) (estará disponible minutos antes del taller). Es recomendable que usted tenga otro dispositivo a parte de su computador para ver la presentación y realizar los ejercicios en la máquina que tiene R. 
 
 ## Instalación de R y Rstudio
 
-Ingresar a la página de **CRAN** (*The Comprehensive $R$ Archive Network*) [en este link](https://cran.r-project.org/)  y descargar **R** para el sistema operativo de su PC (Linux/Window) o Mac. En una PC Windows seleccionar Download R for Windows/base y descargar la versión reciente 4.x.x. Además, para máquinas con Windows es necesario descargar **Rtools** del [siguiente link](https://cran.r-project.org/bin/windows/Rtools/). 
+Ingrese a la página de **CRAN** (*The Comprehensive $R$ Archive Network*) [en este link](https://cran.r-project.org/)  y descargue **R** para el sistema operativo de su PC (Linux/Window) o Mac. En una PC Windows seleccione Download R for Windows/base y descargue la versión reciente 4.x.x. Además, para máquinas con Windows es necesario descargar **Rtools** del [siguiente link](https://cran.r-project.org/bin/windows/Rtools/). 
 
 
-Para descargar **Rstudio** ingrese  en [este link](https://rstudio.com/products/rstudio/) y seleccione la pestaña *DOWNLOAD* (en la parte superior derecha) y luego *RStudio Desktop*  en la versión gratuita. 
+Para descargar **Rstudio** ingrese  en [este link](https://rstudio.com/products/rstudio/) y seleccione la pestaña _DOWNLOAD_ (en la parte superior derecha) y luego _RStudio Desktop_  en la versión gratuita. 
 
-Instale los programas **R**, **Rtools** y **Rstudio** y seguir las indicaciones de instalación.
+Instale los programas **R**, **Rtools** y **Rstudio** y siga las indicaciones de instalación.
 
 ## Primera sesión de R desde Rstudio
 
-Abrir el programa Rstudio, este cargará automáticamente R. Al abrir Rstudio por primera vez, se verá la pantalla como se muestra en la Figura \ref{fig1}. Por defecto el entorno de Rstudio tiene 4 paneles, los cuales se pueden modificar en la pestaña View/Panes. Además, en la pestaña *Tools* puede cambiar la configuración, como el color de fondo, tamaño de letra, etc. 
+Ejecute Rstudio y se cargará automáticamente R. Al abrir Rstudio por primera vez se mostrará como en la Figura \ref{fig1}. Por defecto el entorno de Rstudio tiene 4 paneles, los cuales se pueden modificar en la pestaña _View/Panes_. Además, en la pestaña _Tools_ puede cambiar la configuración: color de fondo, tamaño y tipo de letra, etc. 
 
 
 ![Interfaz de Rstudio.\label{fig1}](rstudio.png)
 
-1) Es el **editor** de código.
+1) Es el *__Editor__* de código (presione las teclas `Ctrl+Shift+N`).
 
-2) Es la **consola** de R. 
+2) Se encuentra la __*Console*__ de R y el *__Terminal__*. 
 
-3) Es el **"environment"** de R, además se encuentra el historial y otros.
+3) Se encuentra el *__Environment__*, *__History__* y otros.
 
-4) Es el directorio de trabajo (**Files**), además se encuentran los paneles **Plots** y la ayuda.
+4) Se encuentran los (**_Files_**), los *__Packages__*, se despliegan los _**Plots**_, en la pestaña __Help__ se encuentra la ayuda de paquetes y funciones.
 
 
 ## Instalación de paquetes
-Los paquetes o librerías (`packages()` o `library()`) en R son programas que permiten hacer un trabajo específico. El programa `base` de R tiene un amplio conjunto de librerías para hacer análisis de datos y estadístico, así como gráficos de alta calidad. Sin embargo, existen otros paquetes que reducen el tiempo de análisis y el número de líneas de código.
 
-Abrir un *script* en el editor desde File/New File/R script. Para instalar las librerías se utiliza el comando `install.packages()`, por ejemplo la siguiente línea instala las librerías tidyverse, tmap, lubridate y raster. 
+Los paquetes o librerías (`packages()` o `library()`) en R son programas que permiten hacer un trabajo específico. El programa `base` de R tiene un amplio conjunto de librerías para hacer análisis de datos y estadístico, así como gráficos de alta calidad. Sin embargo, existen otros paquetes que son útiles para reducir las líneas de código y facilitan un ambiente más amigable para escribir el código.
 
-
+En la consola de Rstudio escriba `install.packages()`, como se muestra en las siguientes líneas para instalar las librerías tidyverse, tmap, lubridate y raster. 
 
 ```{r, eval=FALSE, echo=TRUE}
 install.packages('tidyverse', 'tmap', 'lubridate', 'raster')
 ```
 
-Para cargar las librerías en la sesión de R se utiliza la función `library()`. 
+Para cargar las librerías en la sesión de R utilice la función `library()`. 
 
 ```{r}
 # programas que se cargarán en la sesión de R
@@ -65,21 +63,20 @@ library(tmap)  # creación de mapas temáticos
 library(lubridate)  # procesamiento de fecha y tiempo
 ```
 
-Una vez cargada la(s) librería(s) a la sesión de Rstudio, abrir la ayuda de los paquetes para familiarse con ellos `?raster`, `?tmap`, `help("tmap")`, etc., o desde el panel `Help` puede navegar en la ayyuda. 
+Una vez cargada la(s) librería(s) en la sesión de R, abrir la ayuda de los paquetes para familiarse con ellos `?raster`, `?tmap`, `help("tmap")`, etc., o desde el panel `Help` puede navegar en la ayyuda. 
 
-Instale los paquetes: `"RgoogleMaps", "ggmap", "mapproj", "sf", "osmar", "tidyverse","RColorBrewer","dplyr", "OpenStreetMap", "devtools",  "DT", "raster", "rgdal", "rworldxtra", 'grDevices', 'ggsn', 'tmap', 'utils', 'viridis', 'RColorBrewer', 'RSAGA', 'cptcity'`. Utilizar `install.packages()` como se mostró anteriormente.
+Instale los paquetes: `"RgoogleMaps", "ggmap", "mapproj", "sf", "osmar", "tidyverse","RColorBrewer","dplyr", "OpenStreetMap", "devtools",  "DT", "raster", "rgdal", "rworldxtra", 'grDevices', 'ggsn', 'tmap', 'utils', 'viridis', "datos", 'RColorBrewer', 'RSAGA', 'cptcity'`. Utilizar `install.packages()` como se mostró anteriormente.
 
-Si alguna librería no se instala, ejecute las siguientes lineas
+Si alguna librería no se instala, ejecute las siguientes lineas:
 
 ```{r, eval=FALSE, echo=TRUE}
 options(download.file.method = 'libcurl') # para conectar con la URL del paquete 
 install.packages('nombre_del_paquete', dependences = TRUE)
 ```
 
-Otra opción es descargar los archivos binarios desde la página de CRAN: <https://cran.r-project.org/> ver la Figura \ref{fig2}. Se descargan los archivos en un .zip. Luego en la pestaña `Tools` de Rstudio ir a la pestaña `Tools/Install Packages/Package Archive` y buscar la carpeta que contiene el archivo .zip descargado. 
+Otra opción para instalar paquetes es descargando los archivos binarios desde la página de CRAN: <https://cran.r-project.org/> ver la Figura \ref{fig2}. Se descargan los archivos en un .zip. Luego en la pestaña Tools de Rstudio ir a la pestaña Tools/Install Packages/Package Archive y buscar la carpeta que contiene el archivo .zip. 
 
 ![Lista de paquetes de R\label{fig2}](lista_paquetes.png)
-
 
 En otras ocasiones (**NO SERÁ NECESARIO EN ESTE TALLER**) los programas no están en CRAN y se instalan desde un servicio git (github, gitlab o bitbucket) o Subversion, se utiliza el paquete *remotes* o *devtools* de la siguiente manera:
 
