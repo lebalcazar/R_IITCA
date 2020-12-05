@@ -5,8 +5,14 @@
 library(ggplot2)
 library(magrittr)
 library(lubridate)
+library(gridExtra)
+library(datos)
+
 
 # plots base --------------------------------------------------------------
+# R tiene los siguientes motores de graficación: base (plot, hist, boxplot, 
+# barplot),y lattice y/o ggplot
+
 
 # graficos base 
 plot <- plot(Sepal.Length ~ Petal.Length, data = iris,
@@ -51,30 +57,35 @@ iris %>%
  
   labs(x = 'Longitud del Sépalo', y = 'Longitud del Pétalo')
 
+
+
 # histograma con la lluvia media mensual
-  prc.mes %>% 
-  group_by(nombre, mes) %>% 
-  summarise(prc_mes_Med = mean(prcSum, na.rm = T)) %>% 
-  ggplot(aes(x = mes, y = prc_mes_Med, fill = nombre)
-         ) +
-  geom_col(position = 'dodge') +  
+
+# cargamos la precipitación mensual obtenida en el programa anterior
+load('resultados/tablas/prc.mes.rds')
+
+    # aquí empieza ggplot2. Toma los datos de prc.mes como entrada
+ggplot(data = prc.mes) +
+  # para que no se apilen las columnas utilizamos posición 'dodge'
+  geom_col(mapping = aes(x = mes, 
+                         y = prcMes, 
+                         fill = nombre),
+           position = 'dodge') +  
+  # se modifican las escalas "x", "y", y "fill", relleno de las columnas  
   scale_x_continuous(name = '',
                      breaks = 1:12,
-                     labels = month(1:12, label = T)
-                     ) +
-  scale_y_continuous(name = expression(paste('Preciptación (mm',' ', mes^-1, ')')), 
-                     breaks = seq(0, 500, 100),
-                     labels = seq(0, 500, 100)
-                     )+
+                     labels = month(1:12, label = T)) +
+  scale_y_continuous(name = expression(paste('Preciptación (mm',' ', mes^-1, ')'))
+  ) +
   scale_fill_manual(name = 'Estaciones', 
-                    values = c('black', 'grey20', 'grey40', 'grey60')
-                    )+
-    theme_bw()+
-    theme(legend.position = c(0.20, 0.70),
-          panel.grid = element_blank()
-          )
-   
-# guaradar 
+                    values = c('black', 'grey20', 'grey40', 'grey60')) +
+  # modica la ubicación de la leyenda y elimina el las lineas del plot
+  theme_bw() +
+  theme(legend.position = c(0.20, 0.70),
+        panel.grid = element_blank()
+  )
+  
+# guardar 
 ggsave('resultados/plots/prc.mes.png')  
  
 # guardar con especificaiones 
@@ -82,13 +93,160 @@ ggsave('resultados/plots/prc.mes.png')
          path = 'resultados/plots/', device = 'png',
          dpi = 600, width = 4, height = 3)
 
-# guardar 
-  saveRDS(object = prc.mes, file = 'resultados/plots/prc.mes3.RDS')
+
+# trabajaremos con los datos millas
+millas <- millas
+millas %>% 
+  # cilindrada = tamaño del motor (litros)
+  # autopista = eficiencia del vehículo (millas por galón en autopista)
+  ggplot(aes(x = cilindrada, y = autopista)
+  ) +
+  geom_point()
+
+
+millas %>% 
+# agregamos uan tercera vsariable
+  ggplot(aes(x = cilindrada, y = autopista, colour = clase)
+  ) +
+  geom_point()
   
-  load('resultados/plots/prc.mes3.RDS')
   
   
-  # 
+df2 <- data.frame(sex = rep(c("Female", "Male"), each=3),
+                  time=c("breakfeast", "Lunch", "Dinner"),
+                  bill=c(10, 30, 15, 13, 40, 17) )
+
+ggplot(df2, aes(x=time, y=bill, group=sex)) +
+  geom_line(aes(linetype=sex))+
+  geom_point()+
+  scale_linetype_manual(values=c("twodash", "dotted"))+
+  theme(legend.position="top")  
+
+# Line plot with multiple groups
+ggplot(data=df2, aes(x=time, y=bill, group=sex)) +
+  geom_line()+
+  geom_point()
+# Change line types
+ggplot(data=df2, aes(x=time, y=bill, group=sex)) +
+  geom_line(linetype="dashed")+
+  geom_point()
+
+# Change line colors and sizes
+ggplot(data=df2, aes(x=time, y=bill, group=sex)) +
+  geom_line(linetype="dotted", color="red", size=2)+
+  geom_point(color="blue", size=3)
+
+ggplot(df2, aes(x=time, y=bill, group=sex)) +
+  geom_line(aes(linetype=sex))+
+  geom_point()+
+  theme(legend.position="top")
+# Change line types + colors
+ggplot(df2, aes(x=time, y=bill, group=sex)) +
+  geom_line(aes(linetype=sex, color=sex))+
+  geom_point(aes(color=sex))+
+  theme(legend.position="top")
+
+# Set line types manually
+ggplot(df2, aes(x=time, y=bill, group=sex)) +
+  geom_line(aes(linetype=sex))+
+  geom_point()+
+  scale_linetype_manual(values=c("twodash", "dotted"))+
+  theme(legend.position="top")
+# Change line colors and sizes
+ggplot(df2, aes(x=time, y=bill, group=sex)) +
+  geom_line(aes(linetype=sex, color=sex, size=sex))+
+  geom_point()+
+  scale_linetype_manual(values=c("twodash", "dotted"))+
+  scale_color_manual(values=c('#999999','#E69F00'))+
+  scale_size_manual(values=c(1, 1.5))+
+  theme(legend.position="top")
+
+
+
+
+# cargar un raster de altitud (MNA) África occidental
+alt <- raster('datos/raster/DEM/alt100m.tif')
+plot(alt)
+
+
+# leer coordenadas de estaciones meteo
+estMet <- read.csv('datos/tabular/est.csv') %>% 
+  st_as_sf(coords = c('x','y'), 
+           crs = '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0')
+
+# adjuntar los puntos al DEM
+plot(estMet, add = T, 
+     type = 'p', pch = 16, col = 'blue')
+
+
+
+# cargar poligino de datos globales 
+data("countriesHigh")
+names(countriesHigh)
+
+# convertir a simple feature
+mundo <- sf::st_as_sf(countriesHigh)
+
+# seleccionar la región de Africa Occidental 
+westAfr <- mundo %>% 
+  filter(GEO3 == 'Western Africa') 
+
+# plotear la región
+plot(westAfr$geometry)
+
+# vector de la cuenca 
+cncBafing <- st_read('datos/vector/cncBafing.shp')
+plot(cncBafing, add = T, col = 'red')
+
+# vector de rio
+rioSenegal <- st_read('datos/vector/rioSenegal.shp')
+plot(rioSenegal, add = T, col = 'blue')
+
+# convertir a puntos 
+alt_points <- rasterToPoints(alt) %>% data.frame()
+
+
+mapaWestAfr <- ggplot() + 
+  # polígono de Africa occidental
+  geom_sf(data = westAfr) +
+  # raster del DEM agregado ~1km
+  geom_tile(data = alt_points, aes(x, y, fill = alt100m)) +
+  # polígono de la cuenca Bafing Makana
+  geom_sf(data = cncBafing, colour = 'red', alpha = 0) +
+  
+  geom_sf(data = rioSenegal, colour = 'blue', show.legend = 'line') +
+  geom_sf(data = estMet, colour = 'blue', show.legend = 'point') +
+  
+# cambio de color en el raster (color de terreno)
+scale_fill_gradientn(colours = grDevices::terrain.colors(10),
+                     breaks = round(seq(min(alt_points$alt100m),
+                                        max(alt_points$alt100m),
+                                        by = 400),
+                                    0)) +
+#  guides(fill = guide_legend()) +
+  
+  labs(x = '', y = '', 
+       fill = 'msnm',
+       title = 'Africa Occidental') +
+  ggsn::north(data = westAfr, symbol = 16) +
+  scalebar(westAfr, dist = 250, dist_unit = 'km', st.size = 4,
+           transform = T, model = 'WGS84',location = 'bottomright',) +
+  theme_bw() +
+  theme(panel.grid = element_line(colour = 'grey75'),
+        panel.ontop = T, panel.background = element_rect(color = NA, fill = NA)) +
+  theme(legend.position = c(0.08, 0.16),
+        legend.background = element_blank(),
+        legend.direction = 'vertical') 
+
+mapaWestAfr
+
+# guardar el mapa
+ggsave(filename = 'mapaWestAfr.png', 
+       plot = mapaWestAfr, 
+       device = 'png',
+       path = 'resultados/mapas/',
+       width = 18, height = 16, units = 'cm', dpi = 900)
+
 
 
 
