@@ -1,34 +1,33 @@
 # Cargar librerias
-library(tidyverse) # Pkg para ciencia de datos 
-library(RSAGA)     # Pkg para integrar SAGA con R
-library(raster)    # Pkg para manejar datos raster
-library(sf)        # Pkg para manejar datos vectoriales
-library(tmap)
+library(tidyverse) # pkg para ciencia de datos 
+library(RSAGA)     # pkg para integrar SAGA con R
+library(raster)    # pkg para manejar datos raster
+library(sf)        # pkg para manejar datos vectoriales
+library(tmap)      # pkg para desplegar objetos (raster, poligonos, etc)
 
 
 # Conectar el ambiente de SAGA en Windows
 env <- rsaga.env(path = 'C:/Program Files (x86)/SAGA-GIS')
 env
 
-# para linux 
-# env <- rsaga.env()
-
-dem <- raster(x = 'datos/raster/demEscondido/s_b1w24290utm.rst')
-
+# desplegar las librerias de SAGA
 rsaga.get.libraries()
+
+# modulos del la librería preprocessor 
 rsaga.get.modules("ta_preprocessor")
-rsaga.get.usage("ta_preprocessor", 4)
-RSAGA::rsaga.geoprocessor(lib = "ta_preprocessor", 
-                          module = 4, 
-                          param = list(
-                            ELEV = "datos/raster/demEscondido/s_b1w24290utm.rst",
-                            FILLED = "datos/raster/demEscondido/s_b1w24290utm_fill",
-                            MINSLOPE = 0.0001))
+
+# función para rellenar depresiones del terreno
 rsaga.fill.sinks(in.dem = "datos/raster/demEscondido/s_b1w24290utm.rst",
-                 out.dem = "datos/raster/demEscondido/s_b1w24290utm_fill2",
+                 out.dem = "resultados/raster/escondido/s_b1w24290utm_fill",
                  method = "xxl.wang.liu.2006",
                  minslope = 0.0001)
+
+
 raster("datos/raster/demEscondido/s_b1w24290utm_fill.sdat") %>% plot()
+
+path <- 'resultados/raster/escondido/s_b1w24290utm_fill.sdat'
+dem <- raster(path)
+plot(dem)
 
 # ver el raster-DEM en modo vista
 tmap_mode(mode = 'view')
@@ -44,7 +43,7 @@ raster('resultados/raster/dem_fill.sdat') %>% plot
 rsaga.hillshade(in.dem = 'resultados/raster/dem_fill.sdat',
                 out.grid = 'resultados/raster/hillshade', 
                 exaggeration = 4, env = env
-                )
+)
 raster('resultados/raster/hillshade.sdat') %>% plot()
 
 
