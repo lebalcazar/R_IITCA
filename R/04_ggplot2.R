@@ -7,6 +7,7 @@ library(magrittr)
 library(lubridate)
 library(gridExtra)
 library(datos)
+library(rworldxtra)
 
 
 # plots base --------------------------------------------------------------
@@ -164,6 +165,8 @@ ggplot(df2, aes(x=time, y=bill, group=sex)) +
 
 
 
+# mapas con ggplot --------------------------------------------------------
+
 # cargar un raster de altitud (MNA) África occidental
 alt <- raster('datos/raster/DEM/alt100m.tif')
 plot(alt)
@@ -206,37 +209,47 @@ plot(rioSenegal, add = T, col = 'blue')
 alt_points <- rasterToPoints(alt) %>% data.frame()
 
 
-mapaWestAfr <- ggplot() + 
+mapaWestAfr <-  ggplot() + 
   # polígono de Africa occidental
   geom_sf(data = westAfr) +
   # raster del DEM agregado ~1km
   geom_tile(data = alt_points, aes(x, y, fill = alt100m)) +
   # polígono de la cuenca Bafing Makana
-  geom_sf(data = cncBafing, colour = 'red', alpha = 0) +
+  geom_sf(data = cncBafing, aes(colour = 'Cuenca'), fill = 'red', #alpha = 0,
+          show.legend = 'polygon') +
   
-  geom_sf(data = rioSenegal, colour = 'blue', show.legend = 'line') +
-  geom_sf(data = estMet, colour = 'blue', show.legend = 'point') +
+  geom_sf(data = rioSenegal, aes(colour = 'Río'), 
+          show.legend = 'line') +
+  geom_sf(data = estMet, aes(colour = 'Estaciones'), 
+          show.legend = 'point') +
   
-# cambio de color en el raster (color de terreno)
-scale_fill_gradientn(colours = grDevices::terrain.colors(10),
-                     breaks = round(seq(min(alt_points$alt100m),
-                                        max(alt_points$alt100m),
-                                        by = 400),
-                                    0)) +
-#  guides(fill = guide_legend()) +
+  scale_colour_manual(values = c('Cuenca' = 'red', 'Río' = 'blue', 
+                                 'Estaciones' = 'green'), 
+                      guide = guide_legend(override.aes = 
+                                             list(linetype = c(1, 0, 1),
+                                                  shape = c(NA, 16, NA),
+                                                  fill = c('red', NA, NA)))) +
   
+  # cambio de color en el raster (color de terreno)
+  scale_fill_gradientn(colours = grDevices::terrain.colors(10),
+                       breaks = round(seq(min(alt_points$alt100m),
+                                          max(alt_points$alt100m),
+                                          by = 400),
+                                      0)) +
+  # guides( fill = guide_legend()) +
   labs(x = '', y = '', 
        fill = 'msnm',
-       title = 'Africa Occidental') +
+       title = 'Africa Occidental',
+       colour = '') +
   ggsn::north(data = westAfr, symbol = 16) +
-  scalebar(westAfr, dist = 250, dist_unit = 'km', st.size = 4,
-           transform = T, model = 'WGS84',location = 'bottomright',) +
+  ggsn::scalebar(data = westAfr, dist = 250, dist_unit = 'km', st.size = 2, 
+                 transform = T, model = 'WGS84',location = 'bottomright') +
   theme_bw() +
   theme(panel.grid = element_line(colour = 'grey75'),
-        panel.ontop = T, panel.background = element_rect(color = NA, fill = NA)) +
-  theme(legend.position = c(0.08, 0.16),
+        panel.ontop = T, panel.background = element_rect(color = NA, fill = NA)) + 
+  theme(legend.position = 'bottom',
         legend.background = element_blank(),
-        legend.direction = 'vertical') 
+        legend.direction = 'horizontal') 
 
 mapaWestAfr
 
@@ -246,8 +259,6 @@ ggsave(filename = 'mapaWestAfr.png',
        device = 'png',
        path = 'resultados/mapas/',
        width = 18, height = 16, units = 'cm', dpi = 900)
-
-
 
 
 # tribble -----------------------------------------------------------------
