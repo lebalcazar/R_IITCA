@@ -21,12 +21,24 @@ qtm(mex, fill = 'AREA')
 
 # elementos o capas tm_shape(raster y vectores)
 tm_shape(mex) +
-  tm_fill('AREA') +
+  tm_fill('AREA', title = 'Población') +
   tm_borders('white') +
-  tm_text('POTO00', size = 0.8)
+  tm_text(text = 'AREA', size = 0.8)
 
+
+mex$Pob <- round(mex$POTO00/1000000,3)
 # tmap tiene dos modos (plot y view)
 tmap_mode(mode = 'view')
+tm_shape(mex) +
+  tm_borders('black') +
+  tm_text(text = 'POTO00') + # 
+  tm_fill('POTO00', col = 'Pob',  #title = 'Poblacion',
+          title.col = 'Población', id = "Pob", 
+          popup.vars = c('Poblacion' = "POTO00"),
+          popup.format = list(Pob = list(digits = 3)))
+
+
+
 
 # Población total (en millones) de la entidad federativa, 2000.
 qtm(mex, fill = 'POTO00')
@@ -83,6 +95,8 @@ qtm(westAfr, fill = NULL) +
 
 
 # otra manera de hacerlo con tmap -----------------------------------------
+
+tmap_mode(mode = 'plot')
 
 # crea un polígono bbox
 box <- st_bbox(westAfr) %>% st_as_sfc()
