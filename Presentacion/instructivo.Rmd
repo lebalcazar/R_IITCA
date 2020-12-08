@@ -17,7 +17,7 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 
 En este documento usted encontrará los *links* para descargar los programas R, Rtools, RStudio, SAGA, y algunos paquetes de R. La instalación le tomará un tiempo estimado entre 20 y 30 minutos. 
 
-Los datos para el taller se encuentran en el siguiente  [repositorio](https://github.com/lebalcazar/R_IITCA.git) (estará disponible minutos antes del taller). Es recomendable que usted tenga otro dispositivo a parte de su computador para ver la presentación y realizar los ejercicios en la máquina que tiene R y RStudio. 
+Los datos para el taller se encuentran en el siguiente  [repositorio](https://github.com/lebalcazar/R_IITCA.git) (estará disponible minutos antes del taller). Es recomendable que usted tenga otro dispositivo aparte de su computador para ver la presentación y realizar los ejercicios en la máquina que tiene R y RStudio. 
 
 Además, descargue los siguientes datos de [Senegal](https://www.dropbox.com/s/tkkqyz2kaqoh4cj/DEM_Senegal.7z?dl=0) y   [México](http://www.conabio.gob.mx/informacion/metadata/gis/dipoest00gw.xml?_xsl=/db/metadata/xsl/fgdc_html.xsl&_indent=no), para este último elegir SHP1 "en coordenadas geográficas".
 
