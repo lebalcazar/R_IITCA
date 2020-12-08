@@ -18,12 +18,21 @@ names(mex)
 
 # dos formas de plotear (1) qtm quickly thematic maps y (2) con elementos
 
-# área en miles de km2
+# área en km2
 qtm(mex, fill = 'SUP00')
 
 # filtrar un estado
 EstMex <- filter(mex, ESTADO == 'MEXICO')
 
+# Estado de México
+qtm(EstMex)
+
+# población del EdoMex
+qtm(EstMex, fill = 'POTO00') 
+
+
+tmap_mode(mode = 'view')
+# área en miles de km2
 mex$area <- round(mex$SUP00/1000, 1)
 # elementos o capas tm_shape(raster y vectores)
 tm_shape(mex) +
@@ -31,37 +40,20 @@ tm_shape(mex) +
   tm_text(text = 'area', size = 0.8) +
   tm_fill(col = 'area', title = 'Área [miles de km2]',
           title.col = 'Superficie', id = "ESTADO",
-          popup.vars = c('superficie' = 'area'),
+          popup.vars = c('Superficie' = 'area'),
           popup.format = list(area = list(digits = 1))) 
 
 
 
-mex$Pob <- round(mex$POTO00/1000000,2)
+mex$Pob <- round(mex$POTO00/1000000,1)
 # tmap tiene dos modos (plot y view)
-tmap_mode(mode = 'view')
 tm_shape(mex) +
   tm_borders('grey50') +
   tm_text(text = 'Pob') + 
   tm_fill(col = 'Pob',  title = "Población [millones (2000)]",
           title.col = 'Población', id = "ESTADO", 
           popup.vars = c('Poblacion' = "Pob"),
-          popup.format = list(Pob = list(digits = 3)))
-
-
-
-# Población total (en millones) de la entidad federativa, 2000.
-qtm(mex, fill = 'POTO00')
-
-# cambiar a plot -> view y viceversa
-ttm()
-
-
-
-# Estado de México
-qtm(EstMex)
-
-qtm(EstMex, fill = 'POTO00') 
-  
+          popup.format = list(Pob = list(digits = 1)))
 
 
 
@@ -93,11 +85,11 @@ estMet <- read.csv('datos/tabular/est.csv') %>%
   st_as_sf(coords = c('x','y'), 
            crs = '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0')
 
-
-# graficar 
+tmap_mode(mode = 'plot')
+# graficar (quick thematic map)
 qtm(westAfr, fill = NULL) +
-  qtm(alt, legend.outside = TRUE, ) +
-  qtm(cncBafing, fill = NULL, borders = 'red', legend.outside = T) +
+  qtm(alt, legend.outside = TRUE) +
+  qtm(cncBafing, fill = NULL, borders = 'red') +
   qtm(rioSenegal, lines.col = 'blue')
 
 
@@ -144,12 +136,13 @@ tm_shape(westAfr) +
   tm_shape(cncBafing) +
   tm_borders(col = 'red') +
   tm_add_legend(type = 'fill',
+                border.col = 'red',
                 labels = 'Cuenca',
-                col = 'red') +
-  # layout
-  tm_layout(legend.outside = T, 
-            legend.title.size = 0.8, 
-            legend.text.size = 0.5) + 
+                col = NA) +
+  # escala y norte
+  tm_layout(#legend.outside = T, 
+            legend.title.size = 1, 
+            legend.text.size = 0.8) + 
   tm_scale_bar(position = c(0.01, 0.01)) + 
   tm_compass(size = 2, type = "8star", position = c(0.82, 0.04)) 
   
