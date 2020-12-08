@@ -128,9 +128,10 @@ tm_shape(westAfr) +
   tm_dots(size = 0.2, col = 'blue') +
   tm_layout(legend.outside = T,
             legend.frame = T) +
-  tm_add_legend(type = c('symbol'),
-                labels = c('Estaciones'), 
-                col = c('blue')) +
+  tm_add_legend(type = 'symbol', shape = 16, size = 0.4,
+                border.col = 'blue',
+                labels = 'Estaciones', 
+                col = 'blue') +
   
   # polígono de cuenca
   tm_shape(cncBafing) +
