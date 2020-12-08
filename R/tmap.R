@@ -19,13 +19,21 @@ names(mex)
 # dos formas de plotear (1) qtm quickly thematic maps y (2) con elementos
 
 # área en miles de km2
-qtm(mex, fill = 'AREA')
+qtm(mex, fill = 'SUP00')
 
+# filtrar un estado
+EstMex <- filter(mex, ESTADO == 'MEXICO')
+
+mex$area <- round(mex$SUP00/1000, 1)
 # elementos o capas tm_shape(raster y vectores)
 tm_shape(mex) +
-  tm_fill('AREA', title = 'Población') +
   tm_borders('white') +
-  tm_text(text = 'AREA', size = 0.8)
+  tm_text(text = 'area', size = 0.8) +
+  tm_fill(col = 'area', title = 'Área [miles de km2]',
+          title.col = 'Superficie', id = "ESTADO",
+          popup.vars = c('superficie' = 'area'),
+          popup.format = list(area = list(digits = 1))) 
+
 
 
 mex$Pob <- round(mex$POTO00/1000000,2)
@@ -33,8 +41,8 @@ mex$Pob <- round(mex$POTO00/1000000,2)
 tmap_mode(mode = 'view')
 tm_shape(mex) +
   tm_borders('grey50') +
-  tm_text(text = 'Pob', ) + 
-  tm_fill(col = 'Pob',  title = "Población [millones]",
+  tm_text(text = 'Pob') + 
+  tm_fill(col = 'Pob',  title = "Población [millones (2000)]",
           title.col = 'Población', id = "ESTADO", 
           popup.vars = c('Poblacion' = "Pob"),
           popup.format = list(Pob = list(digits = 3)))
@@ -47,8 +55,7 @@ qtm(mex, fill = 'POTO00')
 # cambiar a plot -> view y viceversa
 ttm()
 
-# filtrar un estado
-EstMex <- filter(mex, ESTADO == 'MEXICO')
+
 
 # Estado de México
 qtm(EstMex)
