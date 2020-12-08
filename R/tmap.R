@@ -6,12 +6,12 @@ library(raster)
 library(tidyverse)
 library(rworldxtra)
 
-download.file(url = "http://www.conabio.gob.mx/informacion/gis/maps/geo/dipoest00gw.zip",
-              destfile = "datos/vector/dipoest00gw.zip")
-unzip("datos/vector/dipoest00gw.zip", exdir = "datos/vector")
+# download.file(url = "http://www.conabio.gob.mx/informacion/gis/maps/geo/dipoest00gw.zip",
+#               destfile = "datos/vector/dipoest00gw.zip")
+# unzip("datos/vector/dipoest00gw.zip", exdir = "datos/vector/dipoest00gw")
 
 # datos espaciales de municipios de México
-mex <- st_read("datos/vector/dipoest00gw.shp")
+mex <- st_read('datos/vector/dipoest00gw/dipoest00gw.shp')
 
 # nombres de los campos
 names(mex)
@@ -28,12 +28,12 @@ tm_shape(mex) +
   tm_text(text = 'AREA', size = 0.8)
 
 
-mex$Pob <- round(mex$POTO00/1000000,3)
+mex$Pob <- round(mex$POTO00/1000000,2)
 # tmap tiene dos modos (plot y view)
 tmap_mode(mode = 'view')
 tm_shape(mex) +
   tm_borders('grey50') +
-  tm_text(text = 'Pob') + 
+  tm_text(text = 'Pob', ) + 
   tm_fill(col = 'Pob',  title = "Población [millones]",
           title.col = 'Población', id = "ESTADO", 
           popup.vars = c('Poblacion' = "Pob"),
