@@ -3,7 +3,7 @@
 .RData
 .Ruserdata
 datos/raster/datos_locales
-datos/vector/dipoest00gw
+datos/vector/dipoest00gw*
 datos/raster/DEM/DEM_Senegal
 Presentacion/presentacion_01
 Presentacion/presentacion_02
