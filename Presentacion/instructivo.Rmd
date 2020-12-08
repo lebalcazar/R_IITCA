@@ -1,9 +1,11 @@
 ---
 title: "Taller Introducción al lenguaje R con un enfoque espacial"
-subtitle: "Instalación de programas"
 author: "Luis Balcázar"
 date: "Toluca, México, diciembre 2020"
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
+subtitle: Instalación de programas
 urlcolor: blue
 citecolor: blue
 linkcolor: blue
