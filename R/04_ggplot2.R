@@ -116,7 +116,7 @@ ggsave('resultados/plots/prc.mes.png')
          dpi = 600, width = 7, height = 5)
   
 
-# trabajaremos con los datos millas
+# datos millas
 millas <- tibble(millas)
 
 millas %>% 
@@ -132,10 +132,6 @@ millas %>%
   geom_point()
   
   
-
-
-
-
 
 # mapas con ggplot --------------------------------------------------------
 
@@ -233,44 +229,10 @@ ggsave(filename = 'mapaWestAfr.png',
        width = 18, height = 16, units = 'cm', dpi = 900)
 
 
-# tribble -----------------------------------------------------------------
-
-people <- tribble(
-  ~Name,
-  'Mark Gindas',
-  'Dave Smith',
-  'Jackie Doe'
-)
-people
-str(people)
-
-people2 <- people %>% 
-  separate(Name, into = c('FIRST', 'LAST'), sep = ' ')
-
-people3 <- people2 %>% 
-  unite(col = 'Nombre completo', FIRST, LAST, sep = ' ', remove = FALSE)
 
 
 
 
 
 
-
-
-
-
-
-
-# expresiones regulares ---------------------------------------------------
-library(stringr)
-
-correo <- c('Luis Bal le.bal@gmail.com', 'Pablito P pal_@hotmail.com', 'Juan A jp-radio@yahoo.com')
-str_extract(string = correo, pattern = "[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\\.[a-zA-Z]+")
-
-texto <- sprintf('las camisas blanc@s pueden ser muy ensuciables el son mal0s resultad@s. 
-                 Miestras que las otras camisas son de buena calidad')
-
-str_extract(texto, pattern = '[a-zA-Z]+@[a-zA-Z]')
-
-str_extract_all(texto, pattern = '[^a-z]+')
 
