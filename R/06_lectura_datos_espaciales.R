@@ -5,21 +5,25 @@ library(raster)
 library(sp)
 # datos raster  -------------------------------------------------------------
 
-# datos PERSIANN-CDR
+# datos PERSIANN-CDR  https://chrsdata.eng.uci.edu/ 
 lf <- list.files(path = 'datos/raster/CDR_Month_WestAfr_tif', 
                  pattern = '.tif$', full.names = T)
 
 cdrStk <- stack(lf)
 
-# precipitación para cada año
+# extraer las fechas 
 lf_years <- paste0(str_extract(lf, '[1-9]\\d{5}'), '01')
-indices <- as.Date(lf_cd, format = '%Y%m%d') %>% 
+indices <- as.Date(lf_years, format = '%Y%m%d') %>% 
   format('%Y') %>% 
   as.numeric()
-cdrSum <- raster::stackApply(x = cdrStk, indices = indices, fun = sum)
 
-# precipitación media anual
-cdrMean <- stackApply(cdrSum, indices = indices, fun = mean)
+# precipitación por año
+cdrSum <- raster::stackApply(x = cdrStk, indices = indices, fun = sum)
+plot(cdrSum[[2]])
+
+# precipitación media anual del área
+cdrMean <- stackApply(cdrSum, indices = nlayers(cdrSum), fun = mean)
+plot(cdrMean)
 writeRaster(cdrMean, 'resultados/raster/cdrMean.tif')
 
 # visualizar
@@ -29,39 +33,11 @@ tm_shape(cdrMean) +
             palette = RColorBrewer::brewer.pal(16,'Blues'),
             alpha = 0.80)
 
-# graficar un mapa por mes
-lf_month <- paste0(str_extract(lf, '[1-9]\\d{5}'), '01')
-indices <- as.Date(lf_month, format = '%Y%m%d') %>% 
-  format('%Y') %>% 
-  as.numeric()
-cdrMeanMonth <- raster::stackApply(x = cdrStk, indices = indices, fun = mean)
-
-# precipitación (mes)
-cdrMeanM <- stackApply(cdrMonth, indices = indices, fun = mean)
 
 
-CDRsum.df <-  as.data.frame(cdrStk, xy = TRUE) %>% 
-  pivot_longer(cols = 3:ncol(.), values_to = 'Prc') %>% 
-  mutate(name = gsub(name, pattern = 'index_', replacement = '') %>%  as.numeric()) %>% 
-  pivot_wider(names_from = name, values_from = Prc)
-names(CDRsum.df) <- mes
-CDRsum.df <- CDRsum.df %>% 
-  pivot_longer(cols = 3:ncol(.), values_to = 'Prc') %>% 
-  mutate(name = factor(name, levels = mes.f,
-                       labels = mes.f)) %>% 
-  ggplot() +
-  geom_raster(aes(x, y, fill = Prc)) +
-  theme_bw()+
-  theme(legend.position = 'bottom',
-        legend.box.spacing = unit(0.1, 'cm'),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank()) +
-  geom_polygon(africa, mapping = aes(x = long, y = lat, group = group),
-               color = 'black', fill = NA) +
-  scale_fill_gradient(low = '#FFFFFF', high = 'blue', 
-                      breaks = c(50, 300, 600)) +
-  labs(x = 'Longitud', y = 'Latitud', fill = 'Precipitación (mm)') +
-  facet_wrap(~name) 
+
+
+
 
 
 
@@ -70,21 +46,26 @@ ggplot()
 
 
 # datos tabulares ---------------------------------------------------------
-# extraer datos de estaciones meteorológicas
+# extraer datos PERSIANN-CDR de estaciones meteorológicas
 # ubicación de 4 estaciones
 est <- read.csv('datos/tabular/est.csv', header = T)
 
 # extraer datos de 4 pixeles 
-cdrTab <- extract(cdrStk, est[,c('x', 'y')]) 
+cdrTab <- raster::extract(cdrStk, est[,c('x', 'y')]) 
+
+# unir los datos con estaciones 
 cdr <- cdrTab %>% 
 bind_cols(est = est,.) %>% 
   pivot_longer(cols = -c('name', 'x', 'y'), 
                names_to = 'date', values_to = 'cdr') %>% 
-  mutate(date = as.Date(paste0(date,01), 'AfrWstCDR_%Y%m%d'))
+  mutate(date = paste0(date,01) %>% 
+           as.Date('AfrWstCDR_%Y%m%d'))
 
-# leer los datos de estaciones 
+# crear una lista con los archivos de texto 
 lf.csv <- list.files(path = 'datos/tabular/meteo', 
                      pattern = 'csv$', full.names = T)
+
+# leer los datos de estaciones
 read <- lapply(lf.csv, function(x){
   read.csv(x, header = F)}) 
 met <- read %>% 
@@ -100,7 +81,8 @@ met <- read %>%
   # recortar entre 1990 y 1999
   filter(year >= 1990 & year <= 1999)
 
-
+# cargar los datos de precipitación mensual 
+load('resultados/tablas/prc.mes.rds')
 
 # vector de fechas
 date <- tibble(date = seq(make_date(min(year(met$date)), 1, 1),
