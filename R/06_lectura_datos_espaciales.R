@@ -65,21 +65,21 @@ bind_cols(est = est,.) %>%
 lf.csv <- list.files(path = 'datos/tabular/meteo', 
                      pattern = 'csv$', full.names = T)
 
-# leer los datos de estaciones
-read <- lapply(lf.csv, function(x){
-  read.csv(x, header = F)}) 
-met <- read %>% 
-  bind_rows() %>% 
-  dplyr::transmute(name = V2, date = as.Date(ISOdate(V5, V4, V3)),  prc = V6) %>% 
-  pivot_wider(names_from = name, values_from = prc) %>%                 #  truco para fechas
-  pivot_longer(cols = -date, names_to = 'name', values_to = 'prc') %>%  #  truco para fechas
-  arrange(name, date) %>% 
-  dplyr::group_by(name, 
-                  year = lubridate::year(date),
-                  month = lubridate::month(date)) %>% 
-  dplyr::summarise(prc = sum(prc, na.rm = T)) %>% 
-  # recortar entre 1990 y 1999
-  filter(year >= 1990 & year <= 1999)
+# # leer los datos de estaciones
+# read <- lapply(lf.csv, function(x){
+#   read.csv(x, header = F)}) 
+# met <- read %>% 
+#   bind_rows() %>% 
+#   dplyr::transmute(name = V2, date = as.Date(ISOdate(V5, V4, V3)),  prc = V6) %>% 
+#   pivot_wider(names_from = name, values_from = prc) %>%                 #  truco para fechas
+#   pivot_longer(cols = -date, names_to = 'name', values_to = 'prc') %>%  #  truco para fechas
+#   arrange(name, date) %>% 
+#   dplyr::group_by(name, 
+#                   year = lubridate::year(date),
+#                   month = lubridate::month(date)) %>% 
+#   dplyr::summarise(prc = sum(prc, na.rm = T)) %>% 
+#   # recortar entre 1990 y 1999
+#   filter(year >= 1990 & year <= 1999)
 
 # cargar los datos de precipitación mensual 
 load('resultados/tablas/prc.mes.rds')
