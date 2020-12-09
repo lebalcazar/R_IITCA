@@ -32,7 +32,7 @@ rnorm(10, 5, 2)
 rweibull(10, shape = 1, scale = 1)
 
 
-# muestra aleatoria
+# muestra aleatoria 
 sample(x = -100:100, size = 8, replace = TRUE)
 sample(-100:100, 8,  T)
 sample(x = letters[], 5, replace = F)
@@ -74,7 +74,7 @@ length(vec[!is.na(vec)])
 
 colnames(df.from.v)
 dim(df.from.v)
-
+str(df.from.v)
 
 # data frame indexación [filas, columnas] 
 # [filas, columnas]
@@ -90,15 +90,15 @@ colSums(df.from.v[ ,-c(1,3)])
 
 # agregar una columna al data frame
 df.from.v$nueva_variable01 <- 1:nrow(df.from.v)
-df.from.v[ ,'nueva_variable2'] <- 1:nrow(df.from.v)
+df.from.v[ ,'nueva_variable2'] <- NA
 
 df.from.v <- data.frame(df.from.v, 
                         nueva_variable3 = round(rnorm(nrow(df.from.v)),2)
 )
 
 # quitar columnas del data frame
-(df.from.v[ ,-c(1, 4)])     # con la ubicación de las variables
-df.from.v$v.logico <- NULL   # con $ y NULL
+df.from.v <- df.from.v[ ,-c(1, 4)]              # con la ubicación de las variables
+df.from.v$nueva_variable2 <- NULL  # con $ y NULL
 df.from.v 
 
 
@@ -155,5 +155,5 @@ lista
 # seleccionar con el operador [[]]
 lista[[2]][ ,1]
 lista[[3]][ , ,1][2, ]
-lista[[2]]$nueva_variable01
+lista[[2]]$v.nombres
 

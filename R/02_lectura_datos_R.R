@@ -1,8 +1,9 @@
-# Datos externos
+# lectura de datos
+
 # los paquetes de R tienen una base datos que se pueden utilizar 
 
 # también se puede cargar la librería datasets 
-library(datasets) # en inglés
+library(datasets) 
 library(datos)    # es español
 
 
@@ -49,7 +50,9 @@ head(dat)
 # selecciona las variables con datos
 datos <- dat[ ,c(1:3, seq(4, ncol(dat), 2))]
 
-# datos texto 
+
+
+# leer datos texto 
 dakar <- read.fwf(file = 'datos/tabular/Dakar_PCP.ts3', 
                   skip = 28, 
                   widths = c(10, 6, 2)
