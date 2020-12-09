@@ -6,9 +6,11 @@ library(magrittr)
 
 
 # pipe %>% ----------------------------------------------------------------
-# obtener la raís cuadrada de la suma de un vector 
+
+
 (vx <- c(45, 46.8, -67, 34.6, 12, 34, 98))
 
+# obtener la raíz cuadrada de la suma de un vector 
 # forma tradicional
 (suma.vx <- sum(vx))
 (raiz.vx <- sqrt(suma.vx))
@@ -21,7 +23,8 @@ round(sqrt(sum(vx)),2)
 vx %>% sum() %>% sqrt() %>% round(2)
 
 # filtrar 
-# retomar el ejercicio anterior
+
+# base
 # de la especie versicolor filtrar los valores de sépalo mayor a 6.5
 iris[iris$Species == 'versicolor' & iris$Sepal.Length > 6.5, ]
 

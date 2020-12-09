@@ -2,36 +2,29 @@
 # los paquetes de R tienen una base datos que se pueden utilizar 
 
 # también se puede cargar la librería datasets 
-library(datasets)
+library(datasets) # en inglés
+library(datos)    # es español
 
 
 # Cargar "data sets" en R -------------------------------------------------
 
 # conjunto de datos del género iris
-iris
+data(iris)
+summary(iris)   
+head(iris)      
 
-
-# conjuntos de datos marcas de vehículos
-str(mtcars)
+# datos de economía de combustible
+millas
+str(millas)
 
 # datos raster
 library(raster)
 library(sp)
 
-# primero ubicar localmente el paquete
-system.file(package = 'raster')
-
-# leer el raster  
+# leer datos de la libraría raster  
 rst <- system.file('external/test.grd', package = "raster") 
 plot(raster(rst))
 
-plot(raster("C:/Users/lebal/Documents/R/win-library/4.0/raster/external/test.grd"))
-
-# hacer un resumen estadístico con los datos iris
-summary(iris)
-
-# seleccionar de la especie versicolor longitud sépalo mayor a 6.5
-(versi.mayor6.5 <- iris[iris$Species == 'versicolor' & iris$Sepal.Length > 6.5, ])
 
 
 # guardar los datos   
@@ -47,17 +40,34 @@ save(iris, mtcars,
 load('resultados/tablas/datos_save.Rdata')
 
 
-# leer datos csv
-dat <- read_csv('datos/tabular/Sikasso.csv')
-
-
-
-
 
 # lectura de datos externos -----------------------------------------------
+# leer datos csv
+dat <- read.csv('datos/tabular/Sikasso.csv')
+head(dat)
 
+# selecciona las variables con datos
+datos <- dat[ ,c(1:3, seq(4, ncol(dat), 2))]
 
+# datos texto 
+dakar <- read.fwf(file = 'datos/tabular/Dakar_PCP.ts3', 
+                  skip = 28, 
+                  widths = c(10, 6, 2)
+                  )
 
+# asignar nombres a las variables
+names(dakar) <- c('fecha', 'tiempo', 'prc')
+head(dakar)
+
+# arreglar la fechas
+dakar$fecha <- as.Date(dakar$fecha, '%Y/%m/%d')
+head(dakar)
+
+# eliminar la columna tiempo 
+dakar$tiempo <- NULL
+head(dakar)
+
+# JSON, GeoJSON, shp, xml, sav, ..., etc
 
 
 

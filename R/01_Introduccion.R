@@ -5,9 +5,9 @@
 
 # vectores ----------------------------------------------------------------
 
-v.numeros <- c(5, 18, -2, 10, -5)
-v.nombres <- c('María', 'Pedro', 'Juan', 'Julia', 'Ana')
-v.logico <- c(TRUE, FALSE, TRUE, TRUE, FALSE)
+(v.numeros <- c(5, 18, -2, 10, -5))
+(v.nombres <- c('María', 'Pedro', 'Juan', 'Julia', 'Ana'))
+(v.logico <- c(TRUE, FALSE, TRUE, TRUE, FALSE))
 
 # construir otros vectores ":"
 8:17  # from:to, by = 1
@@ -15,7 +15,7 @@ v.logico <- c(TRUE, FALSE, TRUE, TRUE, FALSE)
 
 # secuencia de enteros 
 seq(from = 1, to = 20)
-seq(1, 20, by = 0.1)  # incremento de la secuencia
+seq(1, 20, by = 2)  # incremento de la secuencia
 
 # repetir un secuencia de números
 rep(x = 1:3, times = 5)
@@ -46,15 +46,15 @@ c(2, 5, 2) + c(6, 5, 7)
 x * y
 
 # indexación o subconjuntos
-vec <- c(4, 9, 6, 3)
+(vec <- c(4, 9, 6, 3, 0, 2))
 vec[3:4]
-vec[c(4,1)]
+vec[c(6,1)]
 
 # datos faltantes 
-vec <- c(4, NA, NA, 9,6, NA, 3)
+vec <- c(4, NA, NA, 9, 6, NA, 3)
 sum(vec)
 sum(vec[!is.na(vec)]) # devuelve la suma de los datos que no son NA
-sum(is.na(vec)) #devuelve el total de valores NA
+sum(is.na(vec))       # devuelve el total de valores NA
 
 # dimensión del vector
 length(vec)  # incluye los valores identificados como NA
@@ -78,30 +78,29 @@ dim(df.from.v)
 
 # data frame indexación [filas, columnas] 
 # [filas, columnas]
-df.from.v[1, ]  # selecciona fila 1
-df.from.v[ ,1]  # selecciona columna 1
-df.from.v[3:5, 'v.nombres']  # seleccion con el nombre de la columna (variable)
-df.from.v$v.numeros  # seleccion del nombre de la columna y el operador $
+df.from.v[1, ]              # selecciona fila 1
+df.from.v[ ,1]              # selecciona columna 1
+df.from.v[3:5, 'v.nombres'] # selecciona los nombres de las filas 3:5
+df.from.v$v.numeros         # selecciona con el operador $
 
 # seleccion por indexación y suma de columnas 
 colSums(df.from.v[ ,c("v.numeros", "v.logico")])
 colSums(df.from.v[ ,-c(1,3)])
 
 
-# agregar o quitar una columna
-df.from.v[ ,'nueva_variable'] <- 1:nrow(df.from.v)
+# agregar una columna al data frame
+df.from.v$nueva_variable01 <- 1:nrow(df.from.v)
+df.from.v[ ,'nueva_variable2'] <- 1:nrow(df.from.v)
 
 df.from.v <- data.frame(df.from.v, 
-                        nueva_variable2 = round(rnorm(nrow(df.from.v)),2)
+                        nueva_variable3 = round(rnorm(nrow(df.from.v)),2)
 )
 
-# quitar columnas
-df.from.v[ ,-c(1, 4)]     # con la ubicación de las variables
-df.from.v$fecha <- NULL   # con $ y NULL
-df.from.v  
+# quitar columnas del data frame
+(df.from.v[ ,-c(1, 4)])     # con la ubicación de las variables
+df.from.v$v.logico <- NULL   # con $ y NULL
+df.from.v 
 
-df.from.v[setdiff(names(df.from.v), 'v.numeros')]  # con setdiff y los nombres 
-  
 
 # matrices ----------------------------------------------------------------
 
@@ -114,15 +113,12 @@ matrix(data = 1:12, nrow = 4, ncol = 3)
 (m1 <- matrix(data = 1:9, nrow = 3))
 (m2 <- matrix(rnorm(9), 3))
 
- m1 * m2
-
 # operaciones 
 m1 * m2
 
 # indexación de matrices
 # matriz[filas, columas]
 m1[c(1,3),2:3]
-m1[2:3, c(1,3)]
 
 
 # Suma por columnas o filas
@@ -147,7 +143,7 @@ rowSums(m1)
 # seleccionar [fila, columna, (layer, page)]
 
 ar[3,1,2]
-ar[,,1][,c(1,3)]
+ar[ , ,1][ ,c(1,3)]
 
 
 # listas ------------------------------------------------------------------
@@ -157,7 +153,7 @@ lista <- list(v.logico, df.from.v, ar)
 lista
 
 # seleccionar con el operador [[]]
-lista[[2]][,1]
-lista[[3]][ , ,1][2,]
-lista[[2]]$v.nombres
+lista[[2]][ ,1]
+lista[[3]][ , ,1][2, ]
+lista[[2]]$nueva_variable01
 
