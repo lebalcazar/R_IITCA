@@ -47,6 +47,11 @@ save(iris, mtcars,
 load('resultados/tablas/datos_save.Rdata')
 
 
+# leer datos csv
+dat <- read_csv('datos/tabular/Sikasso.csv')
+
+
+
 
 
 # lectura de datos externos -----------------------------------------------
