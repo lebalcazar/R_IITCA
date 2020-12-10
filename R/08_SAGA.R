@@ -55,15 +55,16 @@ flujo <- raster("resultados/raster/escondido/flujo.sdat")
 spplot(flujo)
 
 # redes de cauces 
-# rsaga.get.modules("ta_channels", env = env)
-rsaga.get.usage(lib = "ta_channels", module =  "Channel Network",env = env)
-rsaga.geoprocessor("ta_channels",0,list(ELEVATION="resultados/raster/escondido/alt_fill.sgrd",
-                                        CHNLNTWRK="resultados/raster/escondido/channel_net.sgrd",
-                                        CHNLROUTE="resultados/raster/escondido/route.sdat",
-                                        SHAPES='datos/raster/puntoEscondido/channel_net_shp.shp',
-                                        INIT_GRID="resultados/raster/escondido/flujo.sgrd",
-                                        INIT_METHOD= 2, 
-                                        INIT_VALUE = 500000), 
+rsaga.get.usage(lib = "ta_channels", module =  "Channel Network", env = env)
+
+rsaga.geoprocessor("ta_channels",0,
+                   list(ELEVATION="resultados/raster/escondido/alt_fill.sgrd",
+                        CHNLNTWRK="resultados/raster/escondido/channel_net.sgrd",
+                        CHNLROUTE="resultados/raster/escondido/route.sdat",
+                        SHAPES='datos/raster/puntoEscondido/channel_net_shp.shp',
+                        INIT_GRID="resultados/raster/escondido/flujo.sgrd",
+                        INIT_METHOD= 2, 
+                        INIT_VALUE = 500000), 
                    env = env)
 
 cauces <- st_read("datos/raster/puntoEscondido/channel_net_shp.shp")
