@@ -158,6 +158,21 @@ tm_shape(mex) +
 
 
 
+#####
+# visualizar
+tmap::tmap_mode(mode = 'view')
+tmap::tm_shape(cdrMean) +
+  tmap::tm_raster(style = 'cont', 
+                  palette = RColorBrewer::brewer.pal(16,'Blues'),
+                  alpha = 0.80)
+
+
+
+####
+
+
+
+
 # mapa Africa con tmap ----------------------------------------------------
 
 # cargar los datos 

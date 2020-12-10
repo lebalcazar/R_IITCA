@@ -18,29 +18,16 @@ rsaga.get.modules("ta_preprocessor")
 
 # función para rellenar depresiones del terreno
 rsaga.fill.sinks(in.dem = "datos/raster/demEscondido/s_b1w24290utm.rst",
-                 out.dem = "resultados/raster/escondido/s_b1w24290utm_fill",
+                 out.dem = "resultados/raster/escondido/alt_fill",
                  method = "xxl.wang.liu.2006",
                  minslope = 0.0001)
 
+# plot
+raster("resultados/raster/escondido/alt_fill.sdat") %>% plot()
 
-raster("datos/raster/demEscondido/s_b1w24290utm_fill.sdat") %>% plot()
 
-path <- 'resultados/raster/escondido/s_b1w24290utm_fill.sdat'
-dem <- raster(path)
-plot(dem)
-
-# ver el raster-DEM en modo vista
-tmap_mode(mode = 'view')
-tm_shape(dem) +
-  tm_raster(style = 'cont')
-
-# rellenar huecos, valores faltantes u otros
-rsaga.fill.sinks(in.dem = 'datos/raster/demEscondido/s_b1w24290utm.rst', 
-                 out.dem = 'resultados/raster/dem_fill', env = env)
-raster('resultados/raster/dem_fill.sdat') %>% plot
-
-# hacer un hillshade
-rsaga.hillshade(in.dem = 'resultados/raster/dem_fill.sdat',
+# hillshade
+rsaga.hillshade(in.dem = 'resultados/raster/escondido/alt_fill.sdat',
                 out.grid = 'resultados/raster/hillshade', 
                 exaggeration = 4, env = env
 )
@@ -48,8 +35,61 @@ raster('resultados/raster/hillshade.sdat') %>% plot()
 
 
 
-# 
-print <- raster('D:/04SIG/01 Rawdata/Prc/PERSIANN-CDR_mensual_global_Tif/CDR_2020-08-26072833pm/CDR_201812.tif')
-tm_shape(World) + 
-  tm_polygons("HPI", border.col = 'black', alpha = 0.1, title = '', legend.show = F) + tm_shape(print)  + 
-  tm_raster(style = 'cont', alpha = 0.75, palette = RColorBrewer::brewer.pal(16,name = 'GnBu'), title = 'mm') 
+# hidrología --------------------------------------------------------------
+# algunos módulos para hidrología
+rsaga.get.modules("ta_hydrology")
+rsaga.get.modules("ta_channels")
+
+
+# acumulación de flujo
+rsaga.topdown.processing(in.dem = "resultados/raster/escondido/alt_fill.sgrd", 
+                         out.carea = "resultados/raster/escondido/flujo",  
+                         method = "mfd",
+                         env = env)
+flujo <- raster("resultados/raster/escondido/flujo.sdat")
+spplot(flujo)
+
+
+# redes de cauces 
+rsaga.get.modules("ta_channels", env = env)
+rsaga.get.usage("ta_channels", "Channel Network",env = env)
+rsaga.geoprocessor("ta_channels",0,list(ELEVATION="resultados/raster/escondido/alt_fill.sgrd",
+                                        CHNLNTWRK="resultados/raster/escondido/channel_net.sdat",
+                                        CHNLROUTE="resultados/raster/escondido/route.sdat",
+                                        SHAPES='datos/raster/puntoEscondido/cauces.shp',
+                                        INIT_GRID="resultados/raster/escondido/flujo.sgrd",
+                                        INIT_METHOD= 2, 
+                                        INIT_VALUE = 5000000), 
+                   env = env)
+
+cauces <- st_read("datos/raster/puntoEscondido/cauces.shp")
+
+spplot(as(cauces, "Spatial"), "Order")
+
+
+# delimitación de cuencas
+rsaga.get.usage("ta_channels","Watershed Basins",env = env)
+
+rsaga.geoprocessor("ta_channels",1,
+                   list(ELEVATION = "resultados/raster/escondido/alt_fill.sgrd", 
+                        CHANNELS = "resultados/raster/escondido/channel_net.sdat", 
+                        BASINS = "cuenca.sgrd",
+                        MINSIZE = 100), 
+                   env = env)
+
+
+
+rsaga.hillshade(in.dem = 'resultados/raster/escondido/alt_fill.sdat',
+                out.grid = 'resultados/raster/hillshade', 
+                exaggeration = 4, env = env
+)
+raster('resultados/raster/hillshade.sdat') %>% plot()
+
+
+
+
+
+# ver el raster-DEM en modo vista
+tmap_mode(mode = 'view')
+tm_shape(dem) +
+  tm_raster(style = 'cont')
