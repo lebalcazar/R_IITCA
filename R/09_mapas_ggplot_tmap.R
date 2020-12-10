@@ -2,10 +2,10 @@
 
 library(tmap)
 library(sf)
+library(ggsn)
 library(raster)
 library(tidyverse)
 library(rworldxtra)
-
 
 # mapas con ggplot --------------------------------------------------------
 
@@ -195,9 +195,6 @@ rioSenegal <- st_read('datos/vector/rioSenegal.shp')
 estMet <- read.csv('datos/tabular/est.csv') %>% 
   st_as_sf(coords = c('x','y'), 
            crs = '+proj=longlat +ellps=WGS84 +no_defs')
-
-tmap_mode(mode = 'plot')
-
 
 
 
