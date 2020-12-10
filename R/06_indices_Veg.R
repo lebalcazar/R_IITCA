@@ -5,7 +5,6 @@
 library(raster)
 library(ggplot2)
 library(RStoolbox)
-library(cowplot)
 library(landsat8)
 
 # crear una lista con las imágenes raster
