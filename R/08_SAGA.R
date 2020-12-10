@@ -35,6 +35,7 @@ raster('resultados/raster/hillshade.sdat') %>% plot()
 
 
 
+
 # hidrología --------------------------------------------------------------
 # algunos módulos para hidrología
 rsaga.get.modules("ta_hydrology")
@@ -54,15 +55,15 @@ spplot(flujo)
 rsaga.get.modules("ta_channels", env = env)
 rsaga.get.usage("ta_channels", "Channel Network",env = env)
 rsaga.geoprocessor("ta_channels",0,list(ELEVATION="resultados/raster/escondido/alt_fill.sgrd",
-                                        CHNLNTWRK="resultados/raster/escondido/channel_net.sdat",
+                                        CHNLNTWRK="resultados/raster/escondido/channel_net.sgrd",
                                         CHNLROUTE="resultados/raster/escondido/route.sdat",
-                                        SHAPES='datos/raster/puntoEscondido/cauces.shp',
+                                        SHAPES='datos/raster/puntoEscondido/channel_net_shp.shp',
                                         INIT_GRID="resultados/raster/escondido/flujo.sgrd",
                                         INIT_METHOD= 2, 
                                         INIT_VALUE = 5000000), 
                    env = env)
 
-cauces <- st_read("datos/raster/puntoEscondido/cauces.shp")
+cauces <- st_read("datos/raster/puntoEscondido/channel_net_shp.shp")
 
 spplot(as(cauces, "Spatial"), "Order")
 
@@ -70,26 +71,22 @@ spplot(as(cauces, "Spatial"), "Order")
 # delimitación de cuencas
 rsaga.get.usage("ta_channels","Watershed Basins",env = env)
 
+
 rsaga.geoprocessor("ta_channels",1,
                    list(ELEVATION = "resultados/raster/escondido/alt_fill.sgrd", 
-                        CHANNELS = "resultados/raster/escondido/channel_net.sdat", 
-                        BASINS = "cuenca.sgrd",
-                        MINSIZE = 100), 
+                        CHANNELS = "resultados/raster/escondido/channel_net.sgrd", 
+                        BASINS = "resultados/raster/escondido/basins.sgrd",
+                        MINSIZE = 500), 
                    env = env)
 
+cuencaEscondido <- raster("resultados/raster/escondido/basins.sdat")
 
-
-rsaga.hillshade(in.dem = 'resultados/raster/escondido/alt_fill.sdat',
-                out.grid = 'resultados/raster/hillshade', 
-                exaggeration = 4, env = env
-)
-raster('resultados/raster/hillshade.sdat') %>% plot()
+spplot(cuencaEscondido)
 
 
 
 
 
-# ver el raster-DEM en modo vista
-tmap_mode(mode = 'view')
-tm_shape(dem) +
-  tm_raster(style = 'cont')
+
+
+
