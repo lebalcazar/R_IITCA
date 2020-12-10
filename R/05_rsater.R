@@ -3,12 +3,9 @@
 # SIG --------------------------------------------
 
 library(raster)        # objetos raster
-library(RColorBrewer)  # paleta de colores
-library(grDevices)     # soporte de colores y fuentes
-library(RStoolbox)     # plot raster 
+
 library(sf)
-library(rworldxtra)
-library(ggsn)
+
 
 # crear un raster ingresando la resolución 
 rst1 <- raster(ext = extent(-13, -9,  10, 13.25), 
@@ -63,8 +60,7 @@ plot(alt)
 estMet <- read.csv('datos/tabular/est.csv') %>% 
   st_as_sf(coords = c('x','y'), 
            crs = '+proj=longlat +datum=WGS84 +no_defs')
-             #'+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0')
-
+             
 plot(estMet, add = T, col = 'blue', pch = 16)
 
 # extraer la altitud de los puntos 
@@ -85,4 +81,4 @@ plot(altBafing)
 
 # convertir a puntos 
 alt_points <- rasterToPoints(altBafing) %>% data.frame()
-
+head(alt_points)
