@@ -31,7 +31,7 @@ ggR(ndvi, geom_raster = TRUE) +
                        name = "NDVI") + 
   theme(legend.position = "right") +
   labs(x = '', y = '', 
-       title = 'Valle de Toluca') 
+       title = '') 
 
 #  falso color 
 plotRGB(rst, 'B4', 'B3', 'B2', stretch = "hist", scale = 1000)
@@ -44,7 +44,7 @@ plotRGB(rst, 'B7', 'B6', 'B4', stretch = "hist", scale = 1000)
 plotRGB(rst, 'B5', 'B4', 'B3', stretch = "hist", scale = 1000)
 
 
-# area más pequeña 
+# area pequeña 
 msk <- raster::raster(xmn = 440000, xmx = 448000, ymn = 2112000, ymx = 2120000, 
                       res = c(30, 30), 
                       crs = '+proj=utm +zone=14 +datum=WGS84 +units=m +no_defs')
