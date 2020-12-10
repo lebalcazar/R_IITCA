@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SAGA_METADATA>
+  <DATABASE>
+    <FIELDS>
+      <FIELD TYPE="INTEGER">SegmentID</FIELD>
+      <FIELD TYPE="INTEGER">Order</FIELD>
+      <FIELD TYPE="DOUBLE">Length</FIELD>
+    </FIELDS>
+  </DATABASE>
+  <SOURCE></SOURCE>
+  <HISTORY saga-version="6.3.0">
+    <TOOL library="ta_channels" id="0" name="Channel Network">
+      <OPTION type="grid_system" id="PARAMETERS_GRID_SYSTEM" name="Grid system">
+        <CELLSIZE>100</CELLSIZE>
+        <XMIN>243050</XMIN>
+        <XMAX>355850</XMAX>
+        <YMIN>3113450</YMIN>
+        <YMAX>3191250</YMAX>
+      </OPTION>
+      <OPTION type="choice" id="INIT_METHOD" name="Initiation Type" index="2">Greater than</OPTION>
+      <OPTION type="double" id="INIT_VALUE" name="Initiation Threshold">5000000.000000</OPTION>
+      <OPTION type="integer" id="DIV_CELLS" name="Tracing: Max. Divergence">5</OPTION>
+      <OPTION type="integer" id="MINLEN" name="Min. Segment Length">10</OPTION>
+      <INPUT type="grid" id="ELEVATION" name="Elevation" system="PARAMETERS_GRID_SYSTEM">
+        <TOOL library="ta_preprocessor" id="5" name="Fill Sinks XXL (Wang &amp; Liu)">
+          <OPTION type="grid_system" id="PARAMETERS_GRID_SYSTEM" name="Grid system">
+            <CELLSIZE>100</CELLSIZE>
+            <XMIN>243050</XMIN>
+            <XMAX>355850</XMAX>
+            <YMIN>3113450</YMIN>
+            <YMAX>3191250</YMAX>
+          </OPTION>
+          <OPTION type="double" id="MINSLOPE" name="Minimum Slope [Degree]">0.000100</OPTION>
+          <INPUT type="grid" id="ELEV" name="DEM" system="PARAMETERS_GRID_SYSTEM">
+            <TOOL library="io_gdal" id="0" name="Import Raster">
+              <OPTION type="file" id="FILES" name="Files">datos/raster/demEscondido/s_b1w24290utm.rst</OPTION>
+              <OPTION type="choice" id="MULTIPLE" name="Multiple Bands Output" index="2">automatic</OPTION>
+              <OPTION type="text" id="SELECTION" name="Select from Multiple Bands"/>
+              <OPTION type="boolean" id="TRANSFORM" name="Transformation">TRUE</OPTION>
+              <OPTION type="choice" id="RESAMPLING" name="Resampling" index="0">Nearest Neighbour</OPTION>
+              <OUTPUT type="grid_list" id="GRIDS" name="Grids">s_b1w24290utm</OUTPUT>
+            </TOOL>
+          </INPUT>
+          <OUTPUT type="grid" id="FILLED" name="Filled DEM">s_b1w24290utm [no sinks]</OUTPUT>
+        </TOOL>
+      </INPUT>
+      <INPUT type="grid" id="INIT_GRID" name="Initiation Grid" system="PARAMETERS_GRID_SYSTEM">
+        <TOOL library="ta_hydrology" id="0" name="Flow Accumulation (Top-Down)">
+          <OPTION type="grid_system" id="PARAMETERS_GRID_SYSTEM" name="Grid system">
+            <CELLSIZE>100</CELLSIZE>
+            <XMIN>243050</XMIN>
+            <XMAX>355850</XMAX>
+            <YMIN>3113450</YMIN>
+            <YMAX>3191250</YMAX>
+          </OPTION>
+          <OPTION type="integer" id="STEP" name="Step">1</OPTION>
+          <OPTION type="choice" id="FLOW_UNIT" name="Flow Accumulation Unit" index="1">cell area</OPTION>
+          <OPTION type="choice" id="METHOD" name="Method" index="4">Multiple Flow Direction</OPTION>
+          <OPTION type="boolean" id="LINEAR_DO" name="Thresholded Linear Flow">FALSE</OPTION>
+          <OPTION type="double" id="CONVERGENCE" name="Convergence">1.100000</OPTION>
+          <INPUT type="grid" id="ELEVATION" name="Elevation" system="PARAMETERS_GRID_SYSTEM">
+            <TOOL library="ta_preprocessor" id="5" name="Fill Sinks XXL (Wang &amp; Liu)">
+              <OPTION type="grid_system" id="PARAMETERS_GRID_SYSTEM" name="Grid system">
+                <CELLSIZE>100</CELLSIZE>
+                <XMIN>243050</XMIN>
+                <XMAX>355850</XMAX>
+                <YMIN>3113450</YMIN>
+                <YMAX>3191250</YMAX>
+              </OPTION>
+              <OPTION type="double" id="MINSLOPE" name="Minimum Slope [Degree]">0.000100</OPTION>
+              <INPUT type="grid" id="ELEV" name="DEM" system="PARAMETERS_GRID_SYSTEM">
+                <TOOL library="io_gdal" id="0" name="Import Raster">
+                  <OPTION type="file" id="FILES" name="Files">datos/raster/demEscondido/s_b1w24290utm.rst</OPTION>
+                  <OPTION type="choice" id="MULTIPLE" name="Multiple Bands Output" index="2">automatic</OPTION>
+                  <OPTION type="text" id="SELECTION" name="Select from Multiple Bands"/>
+                  <OPTION type="boolean" id="TRANSFORM" name="Transformation">TRUE</OPTION>
+                  <OPTION type="choice" id="RESAMPLING" name="Resampling" index="0">Nearest Neighbour</OPTION>
+                  <OUTPUT type="grid_list" id="GRIDS" name="Grids">s_b1w24290utm</OUTPUT>
+                </TOOL>
+              </INPUT>
+              <OUTPUT type="grid" id="FILLED" name="Filled DEM">s_b1w24290utm [no sinks]</OUTPUT>
+            </TOOL>
+          </INPUT>
+          <OUTPUT type="grid" id="FLOW" name="Flow Accumulation">Flow Accumulation</OUTPUT>
+        </TOOL>
+      </INPUT>
+      <OUTPUT type="shapes" id="SHAPES" name="Channel Network">Channel Network</OUTPUT>
+    </TOOL>
+  </HISTORY>
+  <FILE></FILE>
+  <DESCRIPTION></DESCRIPTION>
+  <PROJECTION>
+    <OGC_WKT>PROJCS["UTM Zone 14, Northern Hemisphere",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.0174532925199433,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-99],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["Meter",1]]</OGC_WKT>
+    <PROJ4>+proj=utm +zone=14 +datum=WGS84 +units=m +no_defs </PROJ4>
+    <EPSG>-1</EPSG>
+  </PROJECTION>
+</SAGA_METADATA>
