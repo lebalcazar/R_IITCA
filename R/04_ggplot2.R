@@ -5,9 +5,7 @@
 library(ggplot2)
 library(magrittr)
 library(lubridate)
-library(gridExtra)
-library(datos)
-library(rworldxtra)
+library(tidyverse)
 
 
 # plots base --------------------------------------------------------------
@@ -30,6 +28,8 @@ plot <- plot(Sepal.Length ~ Petal.Length, data = iris,
   ggplot(iris, mapping = aes(x = Sepal.Length, y = Petal.Length)) + 
   geom_point(colour = 'blue') +
   theme_bw()
+
+iris <- (iris)
 
 # color por especie
 iris %>% 
@@ -121,21 +121,6 @@ ggsave('resultados/plots/prc.mes.png')
          dpi = 600, width = 7, height = 5)
   
 
-# datos millas
-millas <- tibble(millas)
-
-millas %>% 
-  # cilindrada = tamaño del motor (litros)
-  # autopista = eficiencia del vehículo (millas por galón en autopista)
-  ggplot(aes(x = cilindrada, y = autopista)) +
-  geom_point()
-
-
-millas %>% 
-# agregamos uan tercera variable
-  ggplot(aes(x = cilindrada, y = autopista, colour = clase)) +
-  geom_point()
-  
 # revisar https://exts.ggplot2.tidyverse.org/gallery/
 # https://ggplot2.tidyverse.org/ 
 
