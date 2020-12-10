@@ -1,9 +1,11 @@
 # Lectura de datos geo-espaciales
+
 # cargar librerias
 library(lubridate)
 library(raster)
 library(sp)
 library(tidyverse)
+
 # datos raster  -------------------------------------------------------------
 
 # datos PERSIANN-CDR  https://chrsdata.eng.uci.edu/ 
