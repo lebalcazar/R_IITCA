@@ -1,22 +1,31 @@
+# Se utilizan datos Landsat 8
+# escenas de 2020-02-17
 
 
-# cre una lista con las imágenes raster
-lf <- list.files('datos/raster/', pattern = 'tif$', full.names = T) 
+library(raster)
+library(ggplot2)
+library(RStoolbox)
+library(cowplot)
+library(landsat8)
+
+
+# crear una lista con las imágenes raster
+lf <- list.files('datos/raster/Landsat8/', pattern = 'tif$', full.names = T) 
 
 # apilar las imágenes en el objeto rst 
 rst <- raster::stack(lf)
 
-# indice de vegetación de diferencia normalizadoa NDVI 
-# en ladsa8 RGB es red = banda 4, green = banda 3, blue = 2, y NIR = banda 5
+# renombrar las bandas con RGB 
+blue <- rst$B2 
+green <- rst$B3 
+red <- rst$B4 
+nir <- rst$B5  
 
-red = rst$B4; green = rst$B3; blue = rst$B2; NIR = rst$B5
+# indice de vegetación de diferencia normalizadoa NDVI (-1 NDVI 1)
+ndvi <- (nir - red)/(nir + red) 
 
-# NDVI
-NDVI <- (NIR - red)/(NIR + red) 
-plot(NDVI)
-
-
-ggR(NDVI, geom_raster = TRUE) +
+# graficar 
+ggR(ndvi, geom_raster = TRUE) +
   theme_bw() + 
   scale_fill_gradientn(colours = rev(terrain.colors(100)), 
                        name = "NDVI") + 
@@ -24,10 +33,9 @@ ggR(NDVI, geom_raster = TRUE) +
   labs(x = '', y = '', 
        title = 'Valle de Toluca') 
 
-
 #  falso color 
 plotRGB(rst, 'B4', 'B3', 'B2', stretch = "hist", scale = 1000)
-  
+
 
 # falso color para áreas sin cobertura (urbanas)
 plotRGB(rst, 'B7', 'B6', 'B4', stretch = "hist", scale = 1000)
@@ -51,61 +59,75 @@ plotRGB(rstCrop, 'B6', 'B5', 'B2', stretch = "hist", scale = 1000)
 
 
 
+# cálculo de reflectancia 
 
-lf <- list.files(path = 'datos/raster/Sentinel-2_Mex/', pattern = "jp2",
-                 full.names = T)
-sentinel2 <- stack(lf)
-names(sentinel2)<- c("Blue", "Green", "Red", "NIR")
+# conveir a spatial point
+blue <- as(blue, 'SpatialGridDataFrame')
+green <- as(green, 'SpatialGridDataFrame')
+red <- as(red, 'SpatialGridDataFrame')
+nir <- as(nir, 'SpatialGridDataFrame')
 
+# conversoión a reflectancia TOA (parte superior de la atmósfera)
+blue.ref <- reflconvS(blue, Mp = 2.0000E-05, Ap = -0.100000, sunelev = 48.91468164)  # Mp = Reflectance_multiband_x
+green.ref <- reflconvS(green, Mp = 2.0000E-05, Ap = -0.100000, sunelev = 48.91468164)  # Ap = Reflectance_additive
+red.ref <- reflconvS(red, Mp = 2.0000E-05, Ap = -0.100000, sunelev = 48.91468164)  # sunelev 
+nir.ref <- reflconvS(nir, Mp = 2.0000E-05, Ap = -0.100000, sunelev = 48.91468164)
 
-nir <- sentinel2$NIR # Infrarojo cercano
-red <- sentinel2$Red # Rojo
+blue.ref <- as(blue.ref, 'RasterLayer')
+green.ref <- as(green.ref, 'RasterLayer')
+red.ref <- as(red.ref, 'RasterLayer')
+nir.ref <- as(nir.ref, 'RasterLayer')
 
-ndvi <- (nir-red)/(nir+red) # NDVI
+band <- raster::brick(blue.ref, green.ref, red.ref, nir.ref)
 
-ndvi[ndvi>1] <- 1; ndvi[ndvi< (-1)] <- -1 #Reescalado para evitar outliers
-
-
-# Visualización del NDVI e imagen falso color -----------------------------
-
-# Visualización NDVI guardada en el objeto ndvi_plot
-
-ndvi_plot <- ggR(ndvi, geom_raster = TRUE,alpha = 1) +
-  scale_fill_gradientn(colours = rev(terrain.colors(100)), 
-                       name = "NDVI") + 
-  theme(legend.position = "bottom")
-
-plot(ndvi_plot)
-
-
-# Visualización falso color guardada en el objecto falso_color
-
-falso_color <- ggRGB(sentinel2, r= "NIR" , g="Green" , b="Blue",
-                     stretch = "lin")
-
-# Representación finaltiff
-
-cowplot::plot_grid(ndvi_plot, falso_color)
+plotRGB(band, r = 4, g = 2, b = 1, stretch = 'hist', scale = 2000)
+ggRGB(band, r= 4 , g=2 , b=1,
+      stretch = "hist", scale = 2000)
 
 
-# coon esto se cortó las imagenes
-# se crea una mascar
-msk <- raster::raster(xmn = 412000, xmx = 460000, ymn = 2090000, ymx = 2140000, 
-                      res = c(30, 30), 
-                      crs = '+proj=utm +zone=14 +datum=WGS84 +units=m +no_defs')
-values(msk) <- rep(1, times = ncell(msk))
+# agrupación por k-means
+band_df <- values(band)
 
-rstCrop <- crop(rst, msk)
+idx <- complete.cases(band_df)
 
-ban <- paste0('B', 1:10)
-for (i in 1:nlayers(rstCrop)){
-  writeRaster(rstCrop[[i]], 
-              filename = paste('datos/raster/L8_NDVI/', paste0('B',i), '.tif'), 
-              format = 'GTiff')
-} 
+bandasKM <- raster(band[[1]])
 
-writeRaster(rstCrop,
-            bylayer = T, 
-            filename = paste0('datos/raster/L8_NDVI/', names(rstCrop), '.tif'), 
-            format = 'GTiff')
+values(bandasKM) <- kmClust
+
+for(nClust in 1:4){
+  
+  cat("-> Clustering data for nClust =",nClust,"......")
+  
+  # Realizar clustering K-means
+  km <- kmeans(band_df[idx,], centers = nClust, iter.max = 50)
+  
+  # Crear un vector entero temporal para mantener los números del clúster
+  kmClust <- vector(mode = "integer", length = ncell(band))
+  
+  # Generar un vector de agrupamiento temporal para K-means
+  kmClust[!idx] <- NA
+  kmClust[idx] <- km$cluster
+  
+  # Crear un ráster temporal para mantener la nueva solución de clúster
+  # K-means
+  tmpbandasKM <- raster(band[[1]])
+  
+  # Establecer valores ráster con el vector deL clúster
+  # K-means
+  values(tmpbandasKM) <- kmClust
+  
+  # Unir los rásteres temporales en los finales
+  if(nClust==2){
+    bandasKM    <- tmpbandasKM
+  }else{
+    bandasKM    <- stack(bandasKM, tmpbandasKM)
+  }
+  
+  cat(" hecho =)\n\n")
+}
+
+plot(bandasKM)
+
+writeRaster(bandasKM, "kmeans.tif", overwrite=TRUE)    
+
 
