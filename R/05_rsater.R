@@ -35,22 +35,24 @@ rst2 <- rst2 * 80
 plot(rst1 + rst2)
 
 # overlay 
-plot(overlay(rst1, rst2, fun = sum))
-
+rst3 <- overlay(rst1, rst2, fun = mean) 
 
 # funciones matemáticas (sin, cos, abs, sqrt, round)
 sin(rst2) %>% plot()
 
-# revisar métodos de resúmenes (mean, max)
+# utilizando un escalar
 sum(rst2,500) %>% plot()
 
 # extraer los valores de los pixels 
 rasterToPoints(rst2)
 
+# agrupar imágenes
+rst.stk <- stack(rst1, rst2, rst3)
+plot(rst.stk)
 
 
 # datos DEM SRTM de África Occidental a 3 arcos de segundos ~90-100 m
-altWestAfr <- raster('datos/raster/DEM/AltAfrOcc.tif')
+altWestAfr <- raster('datos/raster/DEM/DEM_Senegal/AltSenegal.rst')
 plot(altWestAfr)
 
 # recortar el DEM para el área de estudio
@@ -58,19 +60,29 @@ alt <- crop(altWestAfr, rst1)
 plot(alt)
 
 # leer coordenadas de estaciones meteo
-estMet <- read.csv('datos/tabular/est.csv')
+estMet <- read.csv('datos/tabular/est.csv') %>% 
+  st_as_sf(coords = c('x','y'), 
+           crs = '+proj=longlat +datum=WGS84 +no_defs')
+             #'+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0')
 
-# adjuntar los puntos al DEM
-plot(estMet, add = T, 
-     type = 'p', pch = 16, col = 'blue')
+plot(estMet, add = T, col = 'blue', pch = 16)
 
 # extraer la altitud de los puntos 
-extract(alt, estMet[, c('x', 'y')]) %>% 
+data <- extract(alt, estMet) %>% 
   cbind(estMet, alt = .)
 
 # cambiar la resolución 
 alt10 <- raster::aggregate(alt, fact = 10, fun = mean)
 plot(alt10)
 
+# leer un vector de cuenca
+cncBafing <- st_read('datos/vector/cncBafing.shp')
+plot(cncBafing, add = T, col = NA)
+
+# cortar el MDE 
+altBafing <- mask(alt10, cncBafing)
+plot(altBafing)
+
 # convertir a puntos 
-alt_points <- rasterToPoints(alt10) %>% data.frame()
+alt_points <- rasterToPoints(altBafing) %>% data.frame()
+

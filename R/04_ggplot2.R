@@ -22,11 +22,10 @@ plot <- plot(Sepal.Length ~ Petal.Length, data = iris,
              col = 'blue', 
              type = 'p', pch = 16)
 
+
+
 # ggplot2 -----------------------------------------------------------------
 # gramática de gráficos
-# revisar https://exts.ggplot2.tidyverse.org/gallery/
-# https://ggplot2.tidyverse.org/ 
-
 
   ggplot(iris, mapping = aes(x = Sepal.Length, y = Petal.Length)) + 
   geom_point(colour = 'blue') +
@@ -40,16 +39,22 @@ iris %>%
   labs(x = 'Longitud del Sépalo', 
        y = 'Longitud del Pétalo', colour = 'Especies')
 
+
+# curva regresión lineal
 iris %>% 
-  ggplot(aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
+  ggplot(aes(x = Petal.Length, y = Petal.Width, color = Species)) +
   geom_point() +
-  stat_smooth(method = 'lm', se = F) +
+  stat_smooth(method = 'lm') +
   labs(x = 'Longitud del Sépalo', y = 'Longitud del Pétalo') +
   theme_bw() +
   theme(legend.position = c(0.85, 0.2),
         panel.grid.minor = element_blank()) 
- 
 
+# boxplot  y facet
+iris %>% 
+  pivot_longer(cols = -Species) %>% 
+  ggplot(aes(x = Species, y = value)) + 
+  geom_boxplot() + facet_wrap(~name)
 
 
 # graficar la lluvia media mensual ----------------------------------
@@ -57,7 +62,7 @@ iris %>%
 # cargamos la precipitación mensual obtenida en el programa anterior
 load('resultados/tablas/prc.mes.rds')
 
-# aquí empieza ggplot2. Toma los datos de prc.mes como entrada
+
 ggplot(data = prc.mes) +
   # para que no se apilen las columnas utilizamos posición 'dodge'
   geom_col(mapping = aes(x = mes, 
@@ -131,108 +136,6 @@ millas %>%
   ggplot(aes(x = cilindrada, y = autopista, colour = clase)) +
   geom_point()
   
-  
-
-# mapas con ggplot --------------------------------------------------------
-
-# cargar un raster de altitud (MNA) África occidental
-alt <- raster('datos/raster/DEM/alt100m.tif')
-plot(alt)
-
-
-# leer coordenadas de estaciones meteo
-estMet <- read.csv('datos/tabular/est.csv') %>% 
-  st_as_sf(coords = c('x','y'), 
-           crs = '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0')
-
-# adjuntar los puntos al DEM
-plot(estMet, add = T, 
-     type = 'p', pch = 16, col = 'blue')
-
-
-
-# cargar poligino de datos globales 
-data("countriesHigh")
-names(countriesHigh)
-
-# convertir a simple feature
-mundo <- sf::st_as_sf(countriesHigh)
-
-# seleccionar la región de Africa Occidental 
-westAfr <- mundo %>% 
-  filter(GEO3 == 'Western Africa') 
-
-# plotear la región
-plot(westAfr$geometry)
-
-# vector de la cuenca 
-cncBafing <- st_read('datos/vector/cncBafing.shp')
-plot(cncBafing, add = T, col = 'red')
-
-# vector de rio
-rioSenegal <- st_read('datos/vector/rioSenegal.shp')
-plot(rioSenegal, add = T, col = 'blue')
-
-# convertir a puntos 
-alt_points <- rasterToPoints(alt) %>% data.frame()
-
-
-mapaWestAfr <-  ggplot() + 
-  # polígono de Africa occidental
-  geom_sf(data = westAfr) +
-  # raster del DEM agregado ~1km
-  geom_tile(data = alt_points, aes(x, y, fill = alt100m)) +
-  # polígono de la cuenca Bafing Makana
-  geom_sf(data = cncBafing, aes(colour = 'Cuenca'), fill = 'red', #alpha = 0,
-          show.legend = 'polygon') +
-  
-  geom_sf(data = rioSenegal, aes(colour = 'Río'), 
-          show.legend = 'line') +
-  geom_sf(data = estMet, aes(colour = 'Estaciones'), 
-          show.legend = 'point') +
-  
-  scale_colour_manual(values = c('Cuenca' = 'red', 'Río' = 'blue', 
-                                 'Estaciones' = 'green'), 
-                      guide = guide_legend(override.aes = 
-                                             list(linetype = c(1, 0, 1),
-                                                  shape = c(NA, 16, NA),
-                                                  fill = c('red', NA, NA)))) +
-  
-  # cambio de color en el raster (color de terreno)
-  scale_fill_gradientn(colours = grDevices::terrain.colors(10),
-                       breaks = round(seq(min(alt_points$alt100m),
-                                          max(alt_points$alt100m),
-                                          by = 400),
-                                      0)) +
-  # guides( fill = guide_legend()) +
-  labs(x = '', y = '', 
-       fill = 'msnm',
-       title = 'Africa Occidental',
-       colour = '') +
-  ggsn::north(data = westAfr, symbol = 16) +
-  ggsn::scalebar(data = westAfr, dist = 250, dist_unit = 'km', st.size = 2, 
-                 transform = T, model = 'WGS84',location = 'bottomright') +
-  theme_bw() +
-  theme(panel.grid = element_line(colour = 'grey75'),
-        panel.ontop = T, panel.background = element_rect(color = NA, fill = NA)) + 
-  theme(legend.position = 'bottom',
-        legend.background = element_blank(),
-        legend.direction = 'horizontal') 
-
-mapaWestAfr
-
-# guardar el mapa
-ggsave(filename = 'mapaWestAfr.png', 
-       plot = mapaWestAfr, 
-       device = 'png',
-       path = 'resultados/mapas/',
-       width = 18, height = 16, units = 'cm', dpi = 900)
-
-
-
-
-
-
-
-
+# revisar https://exts.ggplot2.tidyverse.org/gallery/
+# https://ggplot2.tidyverse.org/ 
 
