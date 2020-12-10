@@ -18,7 +18,7 @@
         <YMAX>3191250</YMAX>
       </OPTION>
       <OPTION type="choice" id="INIT_METHOD" name="Initiation Type" index="2">Greater than</OPTION>
-      <OPTION type="double" id="INIT_VALUE" name="Initiation Threshold">5000000.000000</OPTION>
+      <OPTION type="double" id="INIT_VALUE" name="Initiation Threshold">500000.000000</OPTION>
       <OPTION type="integer" id="DIV_CELLS" name="Tracing: Max. Divergence">5</OPTION>
       <OPTION type="integer" id="MINLEN" name="Min. Segment Length">10</OPTION>
       <INPUT type="grid" id="ELEVATION" name="Elevation" system="PARAMETERS_GRID_SYSTEM">
