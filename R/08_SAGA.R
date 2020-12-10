@@ -44,7 +44,6 @@ raster('resultados/raster/hillshade.sdat') %>% plot()
 rsaga.get.modules("ta_hydrology")
 rsaga.get.modules("ta_channels")
 
-#···································
 # acumulación de flujo
 rsaga.topdown.processing(in.dem = "resultados/raster/escondido/alt_fill.sgrd", 
                          out.carea = "resultados/raster/escondido/flujo",  
@@ -53,32 +52,32 @@ rsaga.topdown.processing(in.dem = "resultados/raster/escondido/alt_fill.sgrd",
 flujo <- raster("resultados/raster/escondido/flujo.sdat")
 spplot(flujo)
 
-#···································
 # redes de cauces 
-rsaga.get.modules("ta_channels", env = env)
-rsaga.get.usage("ta_channels", "Channel Network",env = env)
+# rsaga.get.modules("ta_channels", env = env)
+rsaga.get.usage(lib = "ta_channels", module =  "Channel Network",env = env)
 rsaga.geoprocessor("ta_channels",0,list(ELEVATION="resultados/raster/escondido/alt_fill.sgrd",
                                         CHNLNTWRK="resultados/raster/escondido/channel_net.sgrd",
                                         CHNLROUTE="resultados/raster/escondido/route.sdat",
                                         SHAPES='datos/raster/puntoEscondido/channel_net_shp.shp',
                                         INIT_GRID="resultados/raster/escondido/flujo.sgrd",
                                         INIT_METHOD= 2, 
-                                        INIT_VALUE = 5000000), 
+                                        INIT_VALUE = 500000), 
                    env = env)
 
 cauces <- st_read("datos/raster/puntoEscondido/channel_net_shp.shp")
 
 spplot(as(cauces, "Spatial"), "Order")
 
-#···································
+
+
 # delimitación de cuencas
-rsaga.get.usage("ta_channels","Watershed Basins",env = env)
+rsaga.get.usage(lib = "ta_channels", module = "Watershed Basins",env = env)
 
 
 rsaga.geoprocessor("ta_channels",1,
                    list(ELEVATION = "resultados/raster/escondido/alt_fill.sgrd", 
-                        CHANNELS = "resultados/raster/escondido/channel_net", 
-                        BASINS = "resultados/raster/escondido/basins",
+                        CHANNELS = "resultados/raster/escondido/channel_net.sgrd", 
+                        BASINS = "resultados/raster/escondido/basins.sgrd",
                         MINSIZE = 500), 
                    env = env)
 
@@ -87,12 +86,10 @@ cuencaEscondido <- raster("resultados/raster/escondido/basins.sdat")
 spplot(cuencaEscondido)
 
 
-#···································
 # Cuenca aportante a un punto de salida.
-rsaga.get.modules("ta_hydrology", env = env)
 rsaga.get.usage(lib = "ta_hydrology", module = 4, env = env)
 
-# Coordenada del punto de salida en el mismo SRC del DEM
+# Coordenada cerca de la estación Villa de Fuente
 pxy <-  c(x = 347724.5180, y = 3172076,5631)
 
 # Calculemos la cuenca aportante a ese punto
@@ -107,6 +104,7 @@ rsaga.geoprocessor(
   env = env
 )
 
+# cuenca aportante del río Escondido en (EstHdr. Villa de Fuente)
 cuencaAportante <- raster("resultados/raster/escondido/cuenca_aporte.sdat")
 
 # afinar los valores mediante reclasificación
@@ -123,5 +121,6 @@ plot(cuencaAportante, add = TRUE, legend = FALSE)
 # agregar el punto de salida
 points(pxy[1], pxy[2], cex = 1, pch = 16)
 
-# Referencias ----
-#[1] https://www.sciencedirect.com/science/article/pii/009830049190048I
+# revisar 
+# https://www.sciencedirect.com/science/article/pii/009830049190048I
+# https://rpubs.com/daniballari/geomorfometria_eh
