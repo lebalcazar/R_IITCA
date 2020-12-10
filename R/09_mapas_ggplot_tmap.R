@@ -17,7 +17,8 @@ plot(alt)
 # leer coordenadas de estaciones meteo
 estMet <- read.csv('datos/tabular/est.csv') %>% 
   st_as_sf(coords = c('x','y'), 
-           crs = '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0')
+           crs = '+proj=longlat +datum=WGS84 +no_defs')
+             # '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0')
 
 # adjuntar los puntos al DEM
 plot(estMet, add = T, 
@@ -99,16 +100,21 @@ mapaWestAfr
 ggsave(filename = 'mapaWestAfr.png', 
        plot = mapaWestAfr, 
        device = 'png',
-       path = 'resultados/mapas/',
-       width = 18, height = 16, units = 'cm', dpi = 900)
+       path = 'resultados/mapas',
+       width = 18, height = 16, units = 'cm', dpi = 600)
 
 
+
+
+
+# mapas con tmap ----------------------------------------------------------
 
 
 
 # download.file(url = "http://www.conabio.gob.mx/informacion/gis/maps/geo/dipoest00gw.zip",
 #               destfile = "datos/vector/dipoest00gw.zip")
 # unzip("datos/vector/dipoest00gw.zip", exdir = "datos/vector/dipoest00gw")
+
 
 # datos espaciales de municipios de México
 mex <- st_read('datos/vector/dipoest00gw/dipoest00gw.shp')
@@ -117,6 +123,8 @@ mex <- st_read('datos/vector/dipoest00gw/dipoest00gw.shp')
 names(mex)
 
 # dos formas de plotear (1) qtm quickly thematic maps y (2) con elementos
+
+tmap_mode(mode = 'plot')
 
 # área en km2
 qtm(mex, fill = 'SUP00')
@@ -130,10 +138,12 @@ qtm(EstMex)
 # población del EdoMex
 qtm(EstMex, fill = 'POTO00') 
 
-
+# cambio de plot a view
 tmap_mode(mode = 'view')
+
 # área en miles de km2
-mex$area <- round(mex$SUP00/1000, 1)
+mex <- mex %>% mutate(area = SUP00/1000)  
+
 # elementos o capas tm_shape(raster y vectores)
 tm_shape(mex) +
   tm_borders('white') +
@@ -144,9 +154,9 @@ tm_shape(mex) +
           popup.format = list(area = list(digits = 1))) 
 
 
-
+# población en millones 
 mex$Pob <- round(mex$POTO00/1000000,1)
-# tmap tiene dos modos (plot y view)
+
 tm_shape(mex) +
   tm_borders('grey50') +
   tm_text(text = 'Pob') + 
