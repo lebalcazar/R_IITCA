@@ -2,7 +2,7 @@
 # es una familia de paquetes diseñado para manipulación de datos
 
 library(tidyverse)
-library(magrittr)
+library(magrittr) #dplyr importa el pipe y otras funciones de este paquete
 library(lubridate)
 
 
@@ -31,17 +31,17 @@ iris <- tibble(iris)
 # de la especie versicolor, cuántos registros del largo_de_sépalo son mayores que 6.5 cm
 iris[iris$Species == 'versicolor' & iris$Sepal.Length > 6.5, ]
 
-# filtrar con dplyr (tidyverse)
+# Selección por filas: dplyr::filter (tidyverse)
 iris %>% 
   filter(Species == 'versicolor' & Sepal.Length > 6.5)
 
 
-# agregar una nueva columna con mutate
+# Transformar los datos: agregar una nueva columna con dplyr::mutate
 iris %>% 
   mutate(newCol = Sepal.Length * 2.15, newCol2 = 1:nrow(iris)) %>% 
   head()
 
-# seleccionar
+# Seleccionar por columnas: dplyr::select()
 iris %>% 
   select(Sepal.Length, Sepal.Width)
 
@@ -51,7 +51,7 @@ iris %>%
 iris %>% 
   dplyr::select(starts_with('S')) %>% head()
 
-# resumen de datos con group_by y summarise
+# Agregación de valores: resumen de datos con group_by, summarise y mean
 iris %>% 
   group_by(Species) %>% 
   summarise(media_SL = mean(Sepal.Length),
@@ -63,7 +63,7 @@ iris %>%
   summarise_all(.funs = ~mean(.))
 
 
-# arreglo de datos
+# Tabla pivote: Transformación de la tabla entre filas y columnas
 iris %>% 
   group_by(Species) %>% 
   summarise_all(list(mn = min, mx = max)) %>% 
@@ -71,7 +71,7 @@ iris %>%
   pivot_wider(names_from = minMax, values_from = dimensiones)
 
 
-# ahora leeremos nuestros datos -------------------------------------------
+# Ahora leeremos nuestros datos -------------------------------------------
 
 # crear un lista de los archivos 
 lf <- list.files('datos/tabular/meteo/', pattern = '.csv', full.names = T)
@@ -87,9 +87,17 @@ prc.dia <- data %>%
   # renombramos las variables
   rename(nombre = X2, dia = X3, mes = X4, anio = X5, obs = X6) %>% 
   # crear un vector de fechas
-  mutate(fecha = make_date(year = anio, month = mes, day = dia)) 
+  mutate(fecha = lubridate::make_date(year = anio, month = mes, day = dia)) 
 
+# Ahora los tres pasos en una sola cadena de pasos, evitando pasos extra
 
+prc.dia2 <- 'datos/tabular/meteo/' %>%
+  list.files(pattern = '.csv', full.names = T) %>%
+  map_df(read_csv, col_names = F, na = c('-1', '-99')) %>%
+  dplyr::select(nombre = X2, dia = X3, mes = X4, anio = X5, obs = X6) %>% 
+  mutate(fecha = lubridate::make_date(year = anio, month = mes, day = dia))
+  
+  
 # datos mensuales ---------------------------------------------------------
 
 # primero verificar datos faltantes 
@@ -113,6 +121,10 @@ sumNA(c(2, 4, NA, 6, 9))
 (prc.mes <- prc.dia %>%  
     dplyr::group_by(nombre, anio, mes) %>% 
     dplyr::summarise(prcMes = sumNA(obs))) 
+
+# otra forma más compacta es:
+prc.dia %>% 
+  dplyr::count(nombre, anio, mes, es_NA = is.na(obs))
 
 # guardar los datos mensuales 
 save(prc.mes, file = 'resultados/tablas/prc.mes.rds')
