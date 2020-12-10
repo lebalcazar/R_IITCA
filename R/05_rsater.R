@@ -3,7 +3,6 @@
 # SIG --------------------------------------------
 
 library(raster)        # objetos raster
-
 library(sf)
 
 
