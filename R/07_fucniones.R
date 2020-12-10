@@ -1,5 +1,6 @@
-library(tidyverse)
+
 # funciones ---------------------------------------------------------------
+library(tidyverse)
 
 # Función para generar un data frame con datos aleatorios
 # Necesita ingresar el número de filas y columnas 
@@ -30,8 +31,8 @@ moda <- function(v){
 
 datosG %>% 
   pivot_longer(cols = 1:ncol(.), names_to = 'columnas', values_to = 'num') %>% 
-  group_by(columnas) %>% 
-    summarise(moda = moda(num))
+  dplyr::group_by(columnas) %>% 
+    dplyr::summarise(moda = moda(num))
 
 
 
@@ -71,7 +72,7 @@ colMax
 
 
 
-# en una función
+# for en una función
 colMaxx <- function(x){
   colMax = tibble()
   for(i in 1:ncol(datosG)){
