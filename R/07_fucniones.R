@@ -4,7 +4,7 @@ library(tidyverse)
 # Función para generar un data frame con datos aleatorios
 # Necesita ingresar el número de filas y columnas 
 GenDF <- function(n.row, n.col){
-  vec.datos <- sample(x = 0:10,              # valores modificables
+  vec.datos <- sample(x = 0:100,              # valores modificables
                       size = n.row * n.col,  
                       replace = T)
   df <- as_tibble(matrix(data = vec.datos,    # 
@@ -14,7 +14,7 @@ GenDF <- function(n.row, n.col){
   return(df)
 }
 
-datosG <- GenDF(10, 3)
+datosG <- GenDF(12, 8)
 datosG
 
 
