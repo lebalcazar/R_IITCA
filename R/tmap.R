@@ -1,10 +1,110 @@
-# tmap paquete para mapas temáticos
+# mapas con ggplot y tmap paquete para mapas temáticos
 
 library(tmap)
 library(sf)
 library(raster)
 library(tidyverse)
 library(rworldxtra)
+
+
+# mapas con ggplot --------------------------------------------------------
+
+# cargar un raster de altitud (MNA) África occidental
+alt <- raster('datos/raster/DEM/alt100m.tif')
+plot(alt)
+
+
+# leer coordenadas de estaciones meteo
+estMet <- read.csv('datos/tabular/est.csv') %>% 
+  st_as_sf(coords = c('x','y'), 
+           crs = '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0')
+
+# adjuntar los puntos al DEM
+plot(estMet, add = T, 
+     type = 'p', pch = 16, col = 'blue')
+
+
+
+# cargar poligino de datos globales 
+data("countriesHigh")
+names(countriesHigh)
+
+# convertir a simple feature
+mundo <- sf::st_as_sf(countriesHigh)
+
+# seleccionar la región de Africa Occidental 
+westAfr <- mundo %>% 
+  filter(GEO3 == 'Western Africa') 
+
+# plotear la región
+plot(westAfr$geometry)
+
+# vector de la cuenca 
+cncBafing <- st_read('datos/vector/cncBafing.shp')
+plot(cncBafing, add = T, col = 'red')
+
+# vector de rio
+rioSenegal <- st_read('datos/vector/rioSenegal.shp')
+plot(rioSenegal, add = T, col = 'blue')
+
+# convertir a puntos 
+alt_points <- rasterToPoints(alt) %>% data.frame()
+
+
+mapaWestAfr <-  ggplot() + 
+  # polígono de Africa occidental
+  geom_sf(data = westAfr) +
+  # raster del DEM agregado ~1km
+  geom_tile(data = alt_points, aes(x, y, fill = alt100m)) +
+  # polígono de la cuenca Bafing Makana
+  geom_sf(data = cncBafing, aes(colour = 'Cuenca'), fill = 'red', #alpha = 0,
+          show.legend = 'polygon') +
+  
+  geom_sf(data = rioSenegal, aes(colour = 'Río'), 
+          show.legend = 'line') +
+  geom_sf(data = estMet, aes(colour = 'Estaciones'), 
+          show.legend = 'point') +
+  
+  scale_colour_manual(values = c('Cuenca' = 'red', 'Río' = 'blue', 
+                                 'Estaciones' = 'green'), 
+                      guide = guide_legend(override.aes = 
+                                             list(linetype = c(1, 0, 1),
+                                                  shape = c(NA, 16, NA),
+                                                  fill = c('red', NA, NA)))) +
+  
+  # cambio de color en el raster (color de terreno)
+  scale_fill_gradientn(colours = grDevices::terrain.colors(10),
+                       breaks = round(seq(min(alt_points$alt100m),
+                                          max(alt_points$alt100m),
+                                          by = 400),
+                                      0)) +
+  # guides( fill = guide_legend()) +
+  labs(x = '', y = '', 
+       fill = 'msnm',
+       title = 'Africa Occidental',
+       colour = '') +
+  ggsn::north(data = westAfr, symbol = 16) +
+  ggsn::scalebar(data = westAfr, dist = 250, dist_unit = 'km', st.size = 2, 
+                 transform = T, model = 'WGS84',location = 'bottomright') +
+  theme_bw() +
+  theme(panel.grid = element_line(colour = 'grey75'),
+        panel.ontop = T, panel.background = element_rect(color = NA, fill = NA)) + 
+  theme(legend.position = 'bottom',
+        legend.background = element_blank(),
+        legend.direction = 'horizontal') 
+
+mapaWestAfr
+
+# guardar el mapa
+ggsave(filename = 'mapaWestAfr.png', 
+       plot = mapaWestAfr, 
+       device = 'png',
+       path = 'resultados/mapas/',
+       width = 18, height = 16, units = 'cm', dpi = 900)
+
+
+
+
 
 # download.file(url = "http://www.conabio.gob.mx/informacion/gis/maps/geo/dipoest00gw.zip",
 #               destfile = "datos/vector/dipoest00gw.zip")
