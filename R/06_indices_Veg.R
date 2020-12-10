@@ -1,13 +1,12 @@
 # Se utilizan datos Landsat 8
 # escenas de 2020-02-17
-
+# resolución de 30m
 
 library(raster)
 library(ggplot2)
 library(RStoolbox)
 library(cowplot)
 library(landsat8)
-
 
 # crear una lista con las imágenes raster
 lf <- list.files('datos/raster/Landsat8/', pattern = 'tif$', full.names = T) 
