@@ -1,3 +1,5 @@
+# Obtención de parámetros con RSAGA
+
 # Cargar librerias
 library(tidyverse) # pkg para ciencia de datos 
 library(RSAGA)     # pkg para integrar SAGA con R
