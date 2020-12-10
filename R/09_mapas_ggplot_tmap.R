@@ -18,7 +18,7 @@ plot(alt)
 estMet <- read.csv('datos/tabular/est.csv') %>% 
   st_as_sf(coords = c('x','y'), 
            crs = '+proj=longlat +datum=WGS84 +no_defs')
-             # '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0')
+            
 
 # adjuntar los puntos al DEM
 plot(estMet, add = T, 
@@ -124,6 +124,7 @@ names(mex)
 
 # dos formas de plotear (1) qtm quickly thematic maps y (2) con elementos
 
+# existe el mode plot y view
 tmap_mode(mode = 'plot')
 
 # área en km2
@@ -168,21 +169,6 @@ tm_shape(mex) +
 
 
 
-#####
-# visualizar
-tmap::tmap_mode(mode = 'view')
-tmap::tm_shape(cdrMean) +
-  tmap::tm_raster(style = 'cont', 
-                  palette = RColorBrewer::brewer.pal(16,'Blues'),
-                  alpha = 0.80)
-
-
-
-####
-
-
-
-
 # mapa Africa con tmap ----------------------------------------------------
 
 # cargar los datos 
@@ -208,18 +194,14 @@ rioSenegal <- st_read('datos/vector/rioSenegal.shp')
 # estaciones meteorológicas
 estMet <- read.csv('datos/tabular/est.csv') %>% 
   st_as_sf(coords = c('x','y'), 
-           crs = '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0')
+           crs = '+proj=longlat +ellps=WGS84 +no_defs')
 
 tmap_mode(mode = 'plot')
-# graficar (quick thematic map)
-qtm(westAfr, fill = NULL) +
-  qtm(alt, legend.outside = TRUE) +
-  qtm(cncBafing, fill = NULL, borders = 'red') +
-  qtm(rioSenegal, lines.col = 'blue')
 
 
 
-# otra manera de hacerlo con tmap -----------------------------------------
+
+# plot -----------------------------------------
 
 tmap_mode(mode = 'plot')
 
@@ -227,7 +209,7 @@ tmap_mode(mode = 'plot')
 box <- st_bbox(westAfr) %>% st_as_sfc()
 
 # objeto box
-tm_shape(box) +
+AfrTmap <- tm_shape(box) +
   tm_polygons(col = 'white', border.col = 'black', lwd = 2) +
 
 # polígono de Africa occidental
@@ -266,12 +248,16 @@ tm_shape(westAfr) +
                 labels = 'Cuenca',
                 col = NA) +
   # escala y norte
-  tm_layout(#legend.outside = T, 
-            legend.title.size = 1, 
-            legend.text.size = 0.8) + 
+  tm_layout(legend.title.size = 0.9, 
+            legend.text.size = 0.7) + 
   tm_scale_bar(position = c(0.01, 0.01)) + 
   tm_compass(size = 2, type = "8star", position = c(0.82, 0.04)) 
-  
+
+AfrTmap
+
+tmap_save(tm = AfrTmap, 
+          filename = 'resultados/mapas/AfrTmap.png', 
+          width = 12, height = 10, units = 'cm', dpi = 600)  
   
   
 
