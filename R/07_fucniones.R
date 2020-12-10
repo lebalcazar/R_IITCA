@@ -14,7 +14,7 @@ GenDF <- function(n.row, n.col){
   return(df)
 }
 
-datosG <- GenDF(n.row = 8, n.col = 4)
+datosG <- GenDF(10, 3)
 datosG
 
 
@@ -34,15 +34,12 @@ datosG %>%
     summarise(moda = moda(num))
 
 
-iris %>% 
-  split(.$Species) %>% 
-  map_dbl(~NSe(.$Sepal.Length, .$Sepal.Width))
 
 
 # estructuras de control --------------------------------------------------
 
 # if/else
-x <- sample(c(NA, -10:10), size = 1) # selecciona un número aleatorio 
+x <- sample(c(NA, -10:10, NA), size = 1) # selecciona un número aleatorio 
 
 if (is.na(x) | is.character(x)) {
   stop(paste0('Favor ingrese un número'))
@@ -87,50 +84,4 @@ colMaxx <- function(x){
   return(colMax)
 }
 
-colMaxx2 <- function(x){
-  colMax = tibble(col = rep(NA, ncol(datosG)), Max = rep(NA, ncol(datosG)))
-  for(i in 1:ncol(datosG)){
-    columna <- dplyr::pull(datosG, i)
-    colMax[[1]][i] <- i 
-    colMax[[2]][i] <- max(columna)
-  }
-  return(colMax)
-}
-
-colMaxx3 <- function(x){
-  colMax = tibble(col = rep(NA, ncol(datosG)), Max = rep(NA, ncol(datosG)))
-  for(i in 1:ncol(datosG)){
-    columna <- datosG[[i]]
-    colMax[[1]][i] <- i 
-    colMax[[2]][i] <- max(columna)
-  }
-  return(colMax)
-}
-
-colMaxx4 <- function(x){
-  colMax = tibble(col = rep(NA, ncol(datosG)), Max = rep(NA, ncol(datosG)))
-  for(i in 1:ncol(datosG)){
-    columna <- datosG[i]
-    colMax[[1]][i] <- i 
-    colMax[[2]][i] <- max(columna)
-  }
-  return(colMax)
-}
 colMaxx(datosG)
-colMaxx2(datosG)
-colMaxx3(datosG)
-colMaxx4(datosG)
-
-microbenchmark::microbenchmark(
-  colmax_for = colMaxx(datosG),
-  colmax2_for = colMaxx2(datosG),
-  colmax3_for = colMaxx3(datosG),
-  colmax4_for = colMaxx4(datosG),
-  lapply = as_tibble(lapply(datosG, max)),
-  map = map_df(datosG, max),
-  dplyr = summarise_all(datosG, ~max(.)),
-  times = 1000)
-
-# para usar microbenchmark necesitas instalarlo primero, Sopenco!
-
-
