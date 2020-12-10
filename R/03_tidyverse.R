@@ -46,7 +46,7 @@ iris %>%
   select(Sepal.Length, Sepal.Width)
 
 iris %>% 
-  dplyr::select(1,2)
+  dplyr::select(1,3)
 
 iris %>% 
   dplyr::select(starts_with('S')) %>% head()
@@ -66,7 +66,7 @@ iris %>%
 # Tabla pivote: Transformación de la tabla entre filas y columnas
 iris %>% 
   group_by(Species) %>% 
-  summarise_all(list(mn = min, mx = max)) %>% 
+  dplyr::summarise_all(list(mn = 'min', mx = 'max')) %>% 
   pivot_longer(cols = -Species, names_to = 'minMax', values_to = 'dimensiones') %>% 
   pivot_wider(names_from = minMax, values_from = dimensiones)
 
@@ -85,7 +85,7 @@ prc.dia <- data %>%
   # seleccionamos las columnas que nos interesan
   dplyr::select(-c(X1, X7, X8)) %>% 
   # renombramos las variables
-  rename(nombre = X2, dia = X3, mes = X4, anio = X5, obs = X6) %>% 
+  dplyr::rename(nombre = X2, dia = X3, mes = X4, anio = X5, obs = X6) %>% 
   # crear un vector de fechas
   mutate(fecha = lubridate::make_date(year = anio, month = mes, day = dia)) 
 
@@ -135,14 +135,14 @@ save(prc.mes, file = 'resultados/tablas/prc.mes.rds')
    dplyr::group_by(nombre, anio, mes) %>% 
    dplyr::summarise(prcMes = sumNA(obs)) %>% 
    group_by(nombre, anio) %>% 
-   summarise(prcAnio = sum(prcMes, na.rm = T)))
+   dplyr::summarise(prcAnio = sum(prcMes, na.rm = T)))
 
 
 # obtenga la prc media anual de cada estación 
 
 (prc.medAnual <- prc.anio %>%
-    group_by(nombre) %>% 
-    summarise(prcMedAnual = mean(prcAnio)))
+    dplyr::group_by(nombre) %>% 
+    dplyr::summarise(prcMedAnual = mean(prcAnio)))
 
 
 
